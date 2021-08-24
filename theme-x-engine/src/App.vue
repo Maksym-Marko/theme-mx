@@ -31,22 +31,23 @@ export default {
     */
     set_mx_data() {
 
-      if( typeof theme_mx_data === "undefined" ) {
+      let theme_data = {}
 
-        let theme_mx_data = {}
-        theme_mx_data.post_type = null
+      if( typeof window.theme_mx_data !== "undefined" ) {
+
+        theme_data = window.theme_mx_data
 
       }
 
-      this.mx_data = theme_mx_data
+      this.mx_data = theme_data
 
     }
 
   },
   watch: {
-    mx_data() {
-      // console.log( this.mx_data )
-    }
+    // mx_data() {
+    //   console.log( this.mx_data )
+    // }
   },
   mounted() {
 
