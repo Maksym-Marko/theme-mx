@@ -1,0 +1,23 @@
+theme-x-engine/.DS_Store
+theme-x-engine/node_modules
+theme-x-engine/dist
+
+
+# local env files
+theme-x-engine/.env.local
+theme-x-engine/.env.*.local
+
+# Log files
+theme-x-engine/npm-debug.log*
+theme-x-engine/yarn-debug.log*
+theme-x-engine/yarn-error.log*
+theme-x-engine/pnpm-debug.log*
+
+# Editor directories and files
+theme-x-engine/.idea
+theme-x-engine/.vscode
+theme-x-engine/*.suo
+theme-x-engine/*.ntvs*
+theme-x-engine/*.njsproj
+theme-x-engine/*.sln
+theme-x-engine/*.sw?
