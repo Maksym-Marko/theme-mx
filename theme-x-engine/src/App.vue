@@ -6,16 +6,24 @@
     :mx_data="mx_data"
   />
 
+  <!-- post type "post" -->
+  <PostContent
+    v-if="mx_data && mx_data.post_type === 'post'"
+    :mx_data="mx_data"
+  />
+
 </template>
 
 <script>
 
 import PageContent from './components/PageContent.vue'
+import PostContent from './components/PostContent.vue'
 
 export default {
   name: 'App',
   components: {
-    PageContent
+    PageContent,
+    PostContent
   },
   data() {
     return {

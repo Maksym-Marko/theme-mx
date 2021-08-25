@@ -1,8 +1,8 @@
 <template>
-	<main class="mx-page-content">
+	<main class="mx-post-content">
 		
 		<p>
-			This is a page
+			This is a post
 			
 		</p>
 
@@ -12,7 +12,7 @@
 <script>
 	export default {
 
-		name: 'PageContent',
+		name: 'PostContent',
 		props: {
 			mx_data: {
 				type: Object,

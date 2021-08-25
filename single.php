@@ -8,6 +8,9 @@
  */
 
 get_header();
+
+// render default page template
+( new ThemeMXBasicTemplate() )->render();
 ?>
 
 	<main id="primary" class="site-main">

@@ -136,29 +136,33 @@ function theme_mx_widgets_init() {
 }
 add_action( 'widgets_init', 'theme_mx_widgets_init' );
 
-function mx_global_javascript_vars() {
+/**
+ * Add global variable for Vue.js.
+ */
+// function mx_global_javascript_vars() {
 
-	echo '<script>';
+// 	echo '<script>';
 
-		echo 'window.theme_mx_data = {';
+// 		echo 'window.theme_mx_data = {';
 
-			echo '"post_type":"' 	. get_post_type() . '",';
+// 			echo '"post_type":"' 	. get_post_type() . '",';
 
-			echo '"post_id":"' 	. get_the_ID() . '",';
+// 			echo '"post_id":"' 	. get_the_ID() . '",';
 
-			echo '"ajax_url":"' 	. admin_url( "admin-ajax.php" ) . '"';
+// 			echo '"ajax_url":"' 	. admin_url( "admin-ajax.php" ) . '"';
 
-		echo '};';
+// 		echo '};';
 
-	echo '</script>';
+// 	echo '</script>';
 
-}
-add_action ( 'wp_head', 'mx_global_javascript_vars' );
+// }
+// add_action ( 'wp_head', 'mx_global_javascript_vars' );
 
 /**
  * Enqueue scripts and styles.
  */
 function theme_mx_scripts() {
+
 	wp_enqueue_style( 'theme-mx-style', get_stylesheet_uri(), array(), _S_VERSION );
 	wp_style_add_data( 'theme-mx-style', 'rtl', 'replace' );
 
@@ -166,22 +170,11 @@ function theme_mx_scripts() {
 
 	// theme-x engine chunk-vendors
 	wp_enqueue_script( 'theme-mx-engine-chunk-vendors', get_template_directory_uri() . '/theme-x-engine/dist/js/chunk-vendors.js', [], _S_VERSION, true );
-	
-	// wp_localize_script( 'theme-mx-engine-chunk-vendors', 'theme_mx_data', [
-
-	// 	'ajax_url' 	=> admin_url( "admin-ajax.php" ),
-
-	// 	'post_type' => get_post_type(),
-	// 	'post_id' 	=> get_the_ID()
-
-	// ] );
 
 	// theme-x engine app
 	wp_enqueue_script( 'theme-mx-engine-app', get_template_directory_uri() . '/theme-x-engine/dist/js/app.js', ['theme-mx-engine-chunk-vendors'], _S_VERSION, true );
 
 	
-
-
 	// if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 	// 	wp_enqueue_script( 'comment-reply' );
 	// }
@@ -215,18 +208,7 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 	require get_template_directory() . '/inc/jetpack.php';
 }
 
-// ajax
-add_action( 'wp_ajax_mx_test_request', function() {
-
-	var_dump($_POST);
-
-} );
-
-add_action( 'wp_ajax_nopriv_mx_test_request', function() {
-
-	var_dump($_POST);
-
-} );
-
-
-
+/**
+ * MX Theme Main Class.
+ */
+require get_template_directory() . '/theme-mx-engine/theme-mx-engine.php';
