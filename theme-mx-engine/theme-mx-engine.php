@@ -8,4 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 require get_template_directory() . '/theme-mx-engine/theme-mx-basic-template.php';
 
-
+/**
+ * Include Default Page Template.
+ */
+require get_template_directory() . '/theme-mx-engine/theme-mx-page-template.php';

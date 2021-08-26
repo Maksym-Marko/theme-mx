@@ -69,7 +69,9 @@ class ThemeMXBasicTemplate {
 
 				$script .= '"post_id":"' 	. $this->post_id . '",';
 
-				$script .= '"ajax_url":"' 	. admin_url( "admin-ajax.php" ) . '"';
+				$script .= '"ajax_url":"' 	. admin_url( "admin-ajax.php" ) . '",';
+
+				$script .= '"nonce":"' 	. wp_create_nonce( 'theme_mx_get_content_nonce' ) . '"';			
 
 			$script .= '};';
 
@@ -79,12 +81,27 @@ class ThemeMXBasicTemplate {
 	}
 
 	/*
+	* Expand Global JS variable
+	*/
+	public function mx_expand_javascript_vars()
+	{
+
+		$script = '<script> // Expand Global JS variable. </script>';
+
+		return $script;
+
+	}
+
+	/*
 	* Render template
 	*/
 	public function render()
 	{
 		// Set Global JS variable
 		echo $this->mx_global_javascript_vars();
+
+		// Expand Global JS variable
+		echo $this->mx_expand_javascript_vars();
 
 		// Display app container
 		echo '<div id="app"></div>';

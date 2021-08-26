@@ -15,6 +15,6 @@
 get_header(); 
 
 // render default page template
-( new ThemeMXBasicTemplate() )->render();
+( new ThemeMXPageTemplate() )->render();
 
 get_footer();
