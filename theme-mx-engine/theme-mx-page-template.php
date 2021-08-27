@@ -64,9 +64,25 @@ function get_page_content_func() {
 	// Check out if nonce's matched
 	if( wp_verify_nonce( $_POST['nonce'], 'theme_mx_get_content_nonce' ) ) {
 
-		$content = 'some';
+		global $wpdb;
 
-		echo $content;
+		$table = $wpdb->prefix . 'posts';
+
+		$post_id = intval( $_POST['post_id'] );
+
+		$post = $wpdb->get_row(
+
+			"SELECT * FROM $table
+				WHERE ID = '" . $post_id . "'
+				AND post_status = 'publish'"
+
+		);
+
+		if ( $post !== NULL ) :
+
+			echo $post->post_content;
+
+		endif;
 
 	}
 

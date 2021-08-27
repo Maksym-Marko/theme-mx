@@ -37,7 +37,7 @@ export default {
     /*
     * Set mx_data
     */
-    set_mx_data() {
+    setMxData() {
 
       let theme_data = {}
 
@@ -52,15 +52,10 @@ export default {
     }
 
   },
-  watch: {
-    // mx_data() {
-    //   console.log( this.mx_data )
-    // }
-  },
   mounted() {
 
     // Set mx_data
-    this.set_mx_data()
+    this.setMxData()
 
   }
 }
