@@ -1,17 +1,26 @@
 <template>
 
-	<main class="mx-page-content">
+	<main class="mx-news">
 
-		<div v-html="content"></div>
+		<NewsItem
+			v-for="post in posts"
+			:key="post.ID"
+			:post_content="post"
+		></NewsItem>
 
 	</main>
 
 </template>
 
 <script>
+import NewsItem from './news/NewsItem.vue'
+
 export default {
 
-	name: 'PageContent',
+	name: 'NewsContent',
+	components: {
+		NewsItem
+	},
 	props: {
 		mx_data: {
 			type: Object,
@@ -22,19 +31,20 @@ export default {
 
 		return {
 			content: null,
-			error: null
+			error: null,
+			posts: []
 		}
 
 	},
 	methods: {
 
 		/*
-		* Get Page content
+		* Get news
 		*/
-		getPageContent() {
+		getNews() {
 
 			let data = {
-				action: 'mx_get_page_content',
+				action: 'mx_get_news',
 				nonce: this.mx_data.nonce,
 				extra: '&post_id=' + this.mx_data.post_id
 			}
@@ -58,11 +68,13 @@ export default {
 
 			xhr.onreadystatechange = function() {
 
-				if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+				if ( this.readyState === XMLHttpRequest.DONE && this.status === 200 ) {
 
-					_this.content = this.responseText
+					if( _this.isJSON( this.responseText ) ) {
 
-					_this.error = null
+						_this.posts = JSON.parse( this.responseText )
+
+					}
 
 				}
 				else if (this.status == 400) {
@@ -81,12 +93,21 @@ export default {
 
 			xhr.send( query )
 
+		},
+
+		isJSON( str ) {
+			try {
+				JSON.parse(str);
+			} catch (e) {
+				return false;
+			}
+			return true;
 		}
 
 	},
 	mounted() {
 		
-		this.getPageContent()
+		this.getNews()
 
 	}
 
