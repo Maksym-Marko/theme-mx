@@ -15,6 +15,9 @@ class ThemeMXPageTemplate extends ThemeMXBasicTemplate {
 		// Set Page template
 		$this->set_page_template( $args['page_template'] ?? NULL );
 
+		// extends js vars
+		$this->mx_expand_javascript_vars_page_template();
+
 	}
 
 	/*
@@ -34,16 +37,16 @@ class ThemeMXPageTemplate extends ThemeMXBasicTemplate {
 	/*
 	* Expand Global JS variable
 	*/
-	public function mx_expand_javascript_vars()
+	public function mx_expand_javascript_vars_page_template()
 	{
 
 		$script = '<script>';
 
-			$script .= 'window.theme_mx_data.page_template = "' . $this->page_template . '"';
+		$script .= 'window.theme_mx_data.page_template = "' . $this->page_template . '"';
 
 		$script .= '</script>';
 
-		return $script;
+		array_push( $this->expand_javascript_vars, $script );
 
 	}
 
@@ -52,40 +55,44 @@ class ThemeMXPageTemplate extends ThemeMXBasicTemplate {
 /*
 * Set AJAX actions
 */
-add_action( 'wp_ajax_mx_get_page_content', 'get_page_content_func' );
+if ( ! function_exists( 'get_page_content_func' ) ) :
 
-add_action( 'wp_ajax_nopriv_mx_get_page_content', 'get_page_content_func' );
+	add_action( 'wp_ajax_mx_get_page_content', 'get_page_content_func' );
 
-function get_page_content_func() {	
+	add_action( 'wp_ajax_nopriv_mx_get_page_content', 'get_page_content_func' );
 
-	// Check out if POST nonce is not empty
-	if( empty( $_POST['nonce'] ) ) wp_die( '0' );
+	function get_page_content_func() {
 
-	// Check out if nonce's matched
-	if( wp_verify_nonce( $_POST['nonce'], 'theme_mx_get_content_nonce' ) ) {
+		// Check out if POST nonce is not empty
+		if( empty( $_POST['nonce'] ) ) wp_die( '0' );
 
-		global $wpdb;
+		// Check out if nonce's matched
+		if( wp_verify_nonce( $_POST['nonce'], 'theme_mx_get_content_nonce' ) ) {
 
-		$table = $wpdb->prefix . 'posts';
+			global $wpdb;
 
-		$post_id = intval( $_POST['post_id'] );
+			$table = $wpdb->prefix . 'posts';
 
-		$post = $wpdb->get_row(
+			$post_id = intval( $_POST['post_id'] );
 
-			"SELECT * FROM $table
-				WHERE ID = '" . $post_id . "'
-				AND post_status = 'publish'"
+			$post = $wpdb->get_row(
 
-		);
+				"SELECT * FROM $table
+					WHERE ID = '" . $post_id . "'
+					AND post_status = 'publish'"
 
-		if ( $post !== NULL ) :
+			);
 
-			echo $post->post_content;
+			if ( $post !== NULL ) :
 
-		endif;
+				echo $post->post_content;
+
+			endif;
+
+		}
+
+		wp_die();
 
 	}
 
-	wp_die();
-
-}
+endif;

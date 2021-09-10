@@ -5,6 +5,14 @@
 get_header();
 
 // render default page template
-( new ThemeMXPageTemplate( [ 'page_template' => 'news' ] ) )->render();
+( new ThemeMXNewsTemplate(
+	[
+		'page_template' => 'news',
+		'pagination' 	=> [
+			'enable'		 => true,
+			'posts_per_page' => 3
+		]
+	]
+) )->render();
 
 get_footer();

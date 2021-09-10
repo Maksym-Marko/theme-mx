@@ -9,6 +9,8 @@ class ThemeMXBasicTemplate {
 
 	public $post_id = 0;
 
+	public $expand_javascript_vars = [];
+
 	public function __construct( $args = [] )
 	{
 
@@ -85,12 +87,22 @@ class ThemeMXBasicTemplate {
 	*/
 	public function mx_expand_javascript_vars()
 	{
-
 		$script = '<script> // Expand Global JS variable. </script>';
 
-		return $script;
+		array_push( $this->expand_javascript_vars, $script );
 
 	}
+		public function mx_each_expande_js_var()
+		{
+
+			foreach ( $this->expand_javascript_vars as $key => $value ) {
+				
+				echo $value;
+
+			}
+
+		}
+
 
 	/*
 	* Render template
@@ -101,7 +113,8 @@ class ThemeMXBasicTemplate {
 		echo $this->mx_global_javascript_vars();
 
 		// Expand Global JS variable
-		echo $this->mx_expand_javascript_vars();
+		// $this->mx_expand_javascript_vars();
+		$this->mx_each_expande_js_var();
 
 		// Display app container
 		echo '<div id="app"></div>';

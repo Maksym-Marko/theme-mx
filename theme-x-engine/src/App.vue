@@ -55,7 +55,7 @@ export default {
   },
   data() {
     return {
-      templates: ['news'],
+      templates: ['default', 'news'],
       mx_data: {
         post_type: null,
         page_template: 'default'
@@ -89,7 +89,7 @@ export default {
     */
     checkTemplate() {
 
-      if( ! this.templates.includes( this.mx_data.page_template ) ) {
+      if( ! this.templates.includes( this.mx_data.page_template ) && this.mx_data.post_type === 'page' ) {
 
         // message to consol
         console.warn( '"' + this.mx_data.page_template + '" is unregistered template. Go to App.vue file and place in your template to the "templates" array.' )

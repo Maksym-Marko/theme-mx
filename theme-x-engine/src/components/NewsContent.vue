@@ -5,8 +5,15 @@
 		<NewsItem
 			v-for="post in posts"
 			:key="post.ID"
-			:post_content="post"
-		></NewsItem>
+			:the_post="post"
+		/>
+
+		<NewsPagination
+			v-if="mx_data.pagination.enable"
+			:pagination="mx_data.pagination"
+			:number_news="number_news"
+			@to_page="setPage"
+		/>
 
 	</main>
 
@@ -14,12 +21,14 @@
 
 <script>
 import NewsItem from './news/NewsItem.vue'
+import NewsPagination from './news/NewsPagination.vue'
 
 export default {
 
 	name: 'NewsContent',
 	components: {
-		NewsItem
+		NewsItem,
+		NewsPagination
 	},
 	props: {
 		mx_data: {
@@ -32,11 +41,24 @@ export default {
 		return {
 			content: null,
 			error: null,
-			posts: []
+			posts: [],
+			number_news: 0,
+			current_page: 1
 		}
 
 	},
 	methods: {
+
+		/*
+		* Set page
+		*/
+		setPage( page ) {
+
+			this.current_page = page
+
+			this.getNews()
+
+		},
 
 		/*
 		* Get news
@@ -46,17 +68,17 @@ export default {
 			let data = {
 				action: 'mx_get_news',
 				nonce: this.mx_data.nonce,
-				extra: '&post_id=' + this.mx_data.post_id
+				extra: '&post_id=' + this.mx_data.post_id + '&current_page=' + this.current_page + '&limit=' + this.mx_data.pagination.posts_per_page
 			}
 
-			this.ajax_request( this.mx_data.ajax_url, data )
+			this.ajaxRequestGetNews( this.mx_data.ajax_url, data )
 
 		},
 
 		/*
-		* AJAX Request
+		* AJAX Request Get News
 		*/
-		ajax_request( ajax_url, data ) {
+		ajaxRequestGetNews( ajax_url, data ) {
 
 			const _this = this
 
@@ -95,6 +117,106 @@ export default {
 
 		},
 
+		/*
+		* Get Number of News
+		*/
+		getNumberNews() {
+
+			let data = {
+				action: 'mx_get_number_news',
+				nonce: this.mx_data.nonce
+			}
+
+			this.ajaxRequestGetNumberNews( this.mx_data.ajax_url, data )
+
+		},
+
+		/*
+		* AJAX Request Get Number of News
+		*/
+		ajaxRequestGetNumberNews( ajax_url, data ) {
+
+			const _this = this
+
+			let xhr = new XMLHttpRequest()
+
+			xhr.open( "POST", ajax_url, true )
+
+			xhr.setRequestHeader( "Content-Type", "application/x-www-form-urlencoded;charset=UTF-8" )
+
+			xhr.onreadystatechange = function() {
+
+				if ( this.readyState === XMLHttpRequest.DONE && this.status === 200 ) {
+
+					if( this.responseText ) {
+
+						_this.number_news = parseInt( this.responseText )
+
+					}
+
+				}
+				else if (this.status == 400) {
+
+					_this.error = 'Error 400'
+
+				}
+				else {
+
+					_this.error = 'Unexpected Error'
+
+				}
+			}
+
+			let query = `action=${data.action}&nonce=${data.nonce}`
+
+			xhr.send( query )
+
+		},
+
+		getCurrentPage() {
+
+			let curretn_page = window.location.href
+
+			if( curretn_page.indexOf( '#page-' ) >= 0 ) {
+
+				let matches = curretn_page.match( /#page-(\d+)/ )
+
+				let get_page = parseInt( matches[1] );
+
+				if( Number.isInteger( get_page ) ) {
+
+					if( get_page < 1 ) {
+
+						this.current_page = 1
+
+						history.pushState( { mxThemeNewsPage:'1' },"",'#page-1' )
+
+						return
+
+					}
+
+					let pages = Math.ceil( this.number_news / parseInt( this.mx_data.pagination.posts_per_page ) )
+
+					if( get_page > pages ) {
+
+						this.current_page = pages
+
+						history.pushState( { mxThemeNewsPage: this.current_page },"",'#page-' + this.current_page )
+
+						return
+
+					}
+
+					this.current_page = get_page
+
+					return
+
+				}
+
+			}
+
+		},
+
 		isJSON( str ) {
 			try {
 				JSON.parse(str);
@@ -105,9 +227,20 @@ export default {
 		}
 
 	},
+	watch: {
+
+		number_news() {
+
+			this.getCurrentPage()			
+		
+			this.getNews()
+
+		}
+
+	},
 	mounted() {
 		
-		this.getNews()
+		this.getNumberNews()
 
 	}
 

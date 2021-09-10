@@ -212,3 +212,34 @@ if ( defined( 'JETPACK__VERSION' ) ) {
  * MX Theme Main Class.
  */
 require get_template_directory() . '/theme-mx-engine/theme-mx-engine.php';
+
+// debug data
+function mx_debug_to_file( $content ) {
+
+	$content = mx_content_to_string( $content );
+
+	$path = dirname(__FILE__) . '/mx-debug' ;
+
+	if( ! file_exists( $path ) ) :
+
+		mkdir( $path, 0777, true );
+
+		file_put_contents( $path . '/mx-debug.txt', $content );
+
+	else :
+
+		file_put_contents( $path . '/mx-debug.txt', $content );
+
+	endif;
+
+}
+
+function mx_content_to_string( $content ) {
+
+	ob_start();
+
+	var_dump( $content );
+
+	return ob_get_clean();
+
+}
