@@ -47,7 +47,7 @@
 			v-if="the_post.thumbnails.full"
 			class="mx-post-thumbnail"
 		>
-			<img :src="the_post.thumbnails.medium" alt="">
+			<img :src="the_post.thumbnails.medium" alt="" />
 		</div>
 
 		<div

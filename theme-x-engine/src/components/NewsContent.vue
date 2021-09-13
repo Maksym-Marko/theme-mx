@@ -12,6 +12,7 @@
 			v-if="mx_data.pagination.enable"
 			:pagination="mx_data.pagination"
 			:number_news="number_news"
+			:current_page="current_page"
 			@to_page="setPage"
 		/>
 

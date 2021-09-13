@@ -28,6 +28,7 @@ Nicolas Gallagher and Jonathan Neal https://necolas.github.io/normalize.css/
 # Generic
 	- Normalize
 	- Box sizing
+	- Errors
 # Base
 	- Typography
 	- Elements
@@ -390,6 +391,13 @@ html {
 	box-sizing: border-box;
 }
 
+/* Errors
+--------------------------------------------- */
+.mx-error {
+	color: red;
+	font-weight: bold;
+}
+ 
 /*--------------------------------------------------------------
 # Base
 --------------------------------------------------------------*/
@@ -654,6 +662,9 @@ ul.mx-news-pagination {
 }
 ul.mx-news-pagination li {
 	margin: 0px 20px;
+}
+ul.mx-news-pagination li.active {
+	font-weight: bold;
 }
 .main-navigation {
 	display: block;

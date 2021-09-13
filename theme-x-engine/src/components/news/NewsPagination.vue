@@ -1,12 +1,18 @@
 <template>
 	
 	<ul class="mx-news-pagination">
-		<li>
-			<a href="#">Prev</a>
+		<li
+			v-if="current_page !== 1"
+		>
+			<a 
+				href="#"
+				@click.prevent="toPrevPage"
+			>Prev</a>
 		</li>
 		<li
 			v-for="page in pages"
 			:key="page"
+			:class="[current_page === page ? 'active' : '']"
 		>
 			<a
 				:href="page"
@@ -14,8 +20,13 @@
 			>{{ page }}</a>
 		</li>
 		
-		<li>
-			<a href="#">Next</a>
+		<li
+			v-if="pages !== current_page"
+		>
+			<a
+				href="#"
+				@click.prevent="toNextPage"
+			>Next</a>
 		</li>
 	</ul>
 
@@ -32,6 +43,10 @@
 			number_news: {
 				type: Number,
 				required: true
+			},
+			current_page: {
+				type: Number,
+				required: true
 			}
 		},
 		data() {
@@ -42,6 +57,26 @@
 
 		},
 		methods: {
+
+			toNextPage() {
+
+				let next_page = this.current_page + 1
+
+				this.$emit( 'to_page', next_page )
+
+				history.pushState( { mxThemeNewsPage: next_page },"",'#page-' + next_page )
+
+			},
+
+			toPrevPage() {
+
+				let prev_page = this.current_page - 1
+
+				this.$emit( 'to_page', prev_page )
+
+				history.pushState( { mxThemeNewsPage: prev_page },"",'#page-' + prev_page )
+
+			},
 
 			goToPage( page ) {
 
@@ -62,9 +97,6 @@
 
 			}		
 
-		},
-		mounted() {
-			
 		}
 	}
 </script>
