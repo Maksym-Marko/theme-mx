@@ -1,42 +1,65 @@
 <template>
+
+  <div
+    v-if="mx_data.ajax_url"
+  >
   
-  <!-- post type "page" ... -->
+    <!-- post type "page" ... -->
+    <div
+      v-if="! mx_data.is_single"
+    >
 
-    <!-- templates ... -->
-    
-      <!-- default ... -->
-      <div
-        v-if="mx_data.page_template === 'default'"
-      >
-        <PageContent
-          v-if="mx_data && mx_data.post_type === 'page'"
-          :mx_data="mx_data"
-        />
-      </div>      
-      <!-- ... default -->
+      <!-- templates ... -->
+      
+        <!-- default ... -->
+        <div
+          v-if="mx_data.page_template === 'default'"
+        >
+          <PageContent
+            v-if="mx_data"
+            :mx_data="mx_data"
+          />
+          
+        </div>      
+        <!-- ... default -->
 
-      <!-- news ... -->
-      <div
-        v-if="mx_data.page_template === 'news'"
-      >
-        <NewsContent 
-          v-if="mx_data"
-          :mx_data="mx_data"
-        />
-      </div>      
-      <!-- ... news -->
+        <!-- news ... -->
+        <div
+          v-if="mx_data.page_template === 'news'"
+        >
+          <NewsContent 
+            v-if="mx_data"
+            :mx_data="mx_data"
+          />
+        </div>      
+        <!-- ... news -->
 
-    <!-- ... templates -->
+      <!-- ... templates -->
+    </div>
+    <!-- ... post type "page" -->
 
-  <!-- ... post type "page" -->
+    <div
+      v-else
+    >
 
-  <!-- post type "post" -->
-  <PostContent
-    v-if="mx_data && mx_data.post_type === 'post'"
-    :mx_data="mx_data"
-  />
+      <!-- post type "post", CPT ... -->
+      <PostContent
+        v-if="mx_data.is_single"
+        :mx_data="mx_data"
+      />
+      <!-- ... post type "post", CPT -->
 
-  
+    </div>    
+
+  </div>
+  <div
+    v-else
+  >
+    <p class="mx-error">
+      There is not an ajax url!
+    </p>
+
+  </div>
 
 </template>
 
@@ -58,7 +81,8 @@ export default {
       templates: ['default', 'news'],
       mx_data: {
         post_type: null,
-        page_template: 'default'
+        page_template: 'default',
+        is_single: false
       }
     }
   },

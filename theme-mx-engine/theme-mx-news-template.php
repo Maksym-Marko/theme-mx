@@ -16,6 +16,12 @@ class ThemeMXNewsTemplate extends ThemeMXPageTemplate
 
 		parent::__construct( $args );
 
+		if( get_option( 'posts_per_page' ) ) {
+
+			$this->posts_per_page = get_option( 'posts_per_page' );
+
+		}
+
 		$this->setPaginagion( $args['pagination'] ?? false );
 
 		$this->mx_expand_javascript_vars_pagination();
@@ -106,6 +112,12 @@ if ( ! function_exists( 'mx_get_news_func' ) ) :
 			$current_page = ( $current_page * $limit ) - $limit;
 
 			$post_type = 'post';
+
+			if( isset( $_POST['post_type'] ) ) {
+
+				$post_type = sanitize_text_field( $_POST['post_type'] );
+
+			}
 
 			global $wpdb;
 
@@ -242,6 +254,12 @@ if ( ! function_exists( 'mx_get_number_news_func' ) ) :
 		if( wp_verify_nonce( $_POST['nonce'], 'theme_mx_get_content_nonce' ) ) {
 
 			$post_type = 'post';
+
+			if( isset( $_POST['post_type'] ) ) {
+
+				$post_type = sanitize_text_field( $_POST['post_type'] );
+
+			}
 
 			global $wpdb;
 

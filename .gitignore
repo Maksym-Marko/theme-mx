@@ -1,5 +1,7 @@
 theme-x-engine/.DS_Store
 theme-x-engine/node_modules
+theme-x-engine/dist
+
 
 # local env files
 theme-x-engine/.env.local

@@ -1,6 +1,9 @@
 <template>
 	
-	<ul class="mx-news-pagination">
+	<ul
+		v-if="this.pages > 1"
+		class="mx-news-pagination"
+	>
 		<li
 			v-if="current_page !== 1"
 		>
@@ -95,8 +98,9 @@
 
 				this.pages = Math.ceil( this.number_news / posts_per_page )
 
-			}		
+			}
 
 		}
+
 	}
 </script>

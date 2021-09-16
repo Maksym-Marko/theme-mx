@@ -9,10 +9,14 @@ class ThemeMXBasicTemplate {
 
 	public $post_id = 0;
 
+	public $is_single = false;
+
 	public $expand_javascript_vars = [];
 
 	public function __construct( $args = [] )
 	{
+
+		$this->is_single = is_single();
 
 		// Set post type
 		$this->set_post_type( $args['post_type'] ?? NULL );
@@ -68,6 +72,8 @@ class ThemeMXBasicTemplate {
 			$script .= 'window.theme_mx_data = {';
 
 				$script .= '"post_type":"' 	. $this->post_type . '",';
+
+				$script .= '"is_single":"' 	. $this->is_single . '",';				
 
 				$script .= '"post_id":"' 	. $this->post_id . '",';
 

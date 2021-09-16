@@ -1,13 +1,13 @@
 <?php
 
-/* Template Name: News Template */
+/* Template Name: Books Template */
 
 get_header();
 
 // render default page template
 ( new ThemeMXNewsTemplate(
 	[
-		'post_type' 	=> 'post',
+		'post_type' 	=> 'mxtpfmt_books',
 		'page_template' => 'news',
 		'pagination' 	=> [
 			'enable'		 => true,

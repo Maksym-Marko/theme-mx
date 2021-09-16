@@ -69,7 +69,7 @@ export default {
 			let data = {
 				action: 'mx_get_news',
 				nonce: this.mx_data.nonce,
-				extra: '&post_id=' + this.mx_data.post_id + '&current_page=' + this.current_page + '&limit=' + this.mx_data.pagination.posts_per_page
+				extra: '&post_id=' + this.mx_data.post_id + '&current_page=' + this.current_page + '&limit=' + this.mx_data.pagination.posts_per_page + '&post_type=' + this.mx_data.post_type
 			}
 
 			this.ajaxRequestGetNews( this.mx_data.ajax_url, data )
@@ -96,6 +96,8 @@ export default {
 					if( _this.isJSON( this.responseText ) ) {
 
 						_this.posts = JSON.parse( this.responseText )
+
+						_this.error = null
 
 					}
 
@@ -125,7 +127,8 @@ export default {
 
 			let data = {
 				action: 'mx_get_number_news',
-				nonce: this.mx_data.nonce
+				nonce: this.mx_data.nonce,
+				extra: '&post_type=' + this.mx_data.post_type
 			}
 
 			this.ajaxRequestGetNumberNews( this.mx_data.ajax_url, data )
@@ -153,6 +156,8 @@ export default {
 
 						_this.number_news = parseInt( this.responseText )
 
+						_this.error = null
+
 					}
 
 				}
@@ -168,7 +173,7 @@ export default {
 				}
 			}
 
-			let query = `action=${data.action}&nonce=${data.nonce}`
+			let query = `action=${data.action}&nonce=${data.nonce}${data.extra}`
 
 			xhr.send( query )
 
@@ -225,6 +230,20 @@ export default {
 				return false;
 			}
 			return true;
+		},
+
+		checkError() {
+
+			setTimeout( () => {
+
+				if( this.error ) {
+
+					console.warn( this.error )
+
+				}
+
+			}, 1000 )
+
 		}
 
 	},
@@ -235,6 +254,8 @@ export default {
 			this.getCurrentPage()			
 		
 			this.getNews()
+
+			this.checkError()
 
 		}
 

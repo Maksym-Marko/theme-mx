@@ -106,7 +106,7 @@
 				let data = {
 					action: 'mx_get_post_content',
 					nonce: this.mx_data.nonce,
-					extra: '&post_id=' + this.mx_data.post_id
+					extra: '&post_id=' + this.mx_data.post_id + '&post_type=' + this.mx_data.post_type
 				}
 
 				this.ajaxRequest( this.mx_data.ajax_url, data )

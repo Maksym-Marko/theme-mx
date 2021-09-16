@@ -65,7 +65,7 @@
 		<div
 			v-else
 		>
-			<p class="mx-error">
+			<p class="mx-error" style="display: none;">
 				{{ error }}
 			</p>
 		</div>
@@ -168,12 +168,28 @@ export default {
 					return false;
 				}
 				return true;
+			},
+
+			checkError() {
+
+				setTimeout( () => {
+
+					if( this.error ) {
+
+						console.warn( this.error )
+
+					}
+
+				}, 1000 )
+
 			}
 
 		},
 		mounted() {
 
 			this.getPostContent()
+
+			this.checkError()
 			
 		}
 
