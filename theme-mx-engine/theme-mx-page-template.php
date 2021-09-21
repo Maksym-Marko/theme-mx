@@ -3,7 +3,8 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class ThemeMXPageTemplate extends ThemeMXBasicTemplate {
+class ThemeMXPageTemplate extends ThemeMXBasicTemplate
+{
 
 	public $page_template = 'default';
 
@@ -42,7 +43,7 @@ class ThemeMXPageTemplate extends ThemeMXBasicTemplate {
 
 		$script = '<script>';
 
-		$script .= 'window.theme_mx_data.page_template = "' . $this->page_template . '"';
+		$script .= 'window.theme_mx_data.page_template = "' . $this->page_template . '";';
 
 		$script .= '</script>';
 

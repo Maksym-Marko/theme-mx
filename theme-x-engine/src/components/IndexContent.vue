@@ -1,14 +1,14 @@
 <template>
 
-	<main class="mx-news mx-site-main">
+	<main class="mx-index mx-site-main">
 
-		<NewsItem
+		<Item
 			v-for="post in posts"
 			:key="post.ID"
 			:the_post="post"
 		/>
 
-		<NewsPagination
+		<Pagination
 			v-if="mx_data.pagination.enable"
 			:pagination="mx_data.pagination"
 			:number_news="number_news"
@@ -21,15 +21,15 @@
 </template>
 
 <script>
-import NewsItem from './news/NewsItem.vue'
-import NewsPagination from './news/NewsPagination.vue'
+import Item from './index/Item.vue'
+import Pagination from './index/Pagination.vue'
 
 export default {
 
-	name: 'NewsContent',
+	name: 'IndexContent',
 	components: {
-		NewsItem,
-		NewsPagination
+		Item,
+		Pagination
 	},
 	props: {
 		mx_data: {

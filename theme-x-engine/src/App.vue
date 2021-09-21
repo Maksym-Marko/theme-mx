@@ -23,6 +23,28 @@
         </div>      
         <!-- ... default -->
 
+        <!-- index ... -->
+        <div
+          v-if="mx_data.page_template === 'index'"
+        >
+          <IndexContent 
+            v-if="mx_data"
+            :mx_data="mx_data"
+          />
+        </div>
+        <!-- ... index -->
+
+        <!-- archive ... -->
+        <div
+          v-if="mx_data.page_template === 'archive'"
+        >
+          <ArchiveContent 
+            v-if="mx_data"
+            :mx_data="mx_data"
+          />
+        </div>      
+        <!-- ... archive -->
+
         <!-- news ... -->
         <div
           v-if="mx_data.page_template === 'news'"
@@ -33,6 +55,19 @@
           />
         </div>      
         <!-- ... news -->
+
+        <!-- 404 ... -->
+        <div
+          v-if="mx_data.page_template === '404'"
+        >
+
+          <Page404Content 
+            v-if="mx_data"
+            :mx_data="mx_data"
+          />
+
+        </div>      
+        <!-- ... 404 -->  
 
       <!-- ... templates -->
     </div>
@@ -67,18 +102,31 @@
 
 import PageContent from './components/PageContent.vue'
 import PostContent from './components/PostContent.vue'
+import IndexContent from './components/IndexContent.vue'
 import NewsContent from './components/NewsContent.vue'
+import ArchiveContent from './components/ArchiveContent.vue'
+import Page404Content from './components/Page404Content.vue'
 
 export default {
   name: 'App',
   components: {
     PageContent,
     PostContent,
-    NewsContent
+    IndexContent,
+    NewsContent,
+    ArchiveContent,
+    Page404Content
   },
   data() {
     return {
-      templates: ['default', 'news'],
+      templates: [
+        'default',
+        'index',
+        'archive',
+        'news',
+        'archive',
+        '404'
+      ],
       mx_data: {
         post_type: null,
         page_template: 'default',

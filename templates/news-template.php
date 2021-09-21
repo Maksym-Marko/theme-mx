@@ -4,7 +4,7 @@
 
 get_header();
 
-// render default page template
+// render news page template
 ( new ThemeMXNewsTemplate(
 	[
 		'post_type' 	=> 'post',

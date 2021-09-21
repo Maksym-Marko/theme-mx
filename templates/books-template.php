@@ -4,7 +4,7 @@
 
 get_header();
 
-// render default page template
+// render books page template
 ( new ThemeMXNewsTemplate(
 	[
 		'post_type' 	=> 'mxtpfmt_books',

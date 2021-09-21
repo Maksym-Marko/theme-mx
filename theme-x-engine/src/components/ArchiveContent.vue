@@ -1,6 +1,22 @@
 <template>
 
-	<main class="mx-news mx-site-main">
+	<main class="mx-archive mx-site-main">
+
+		<header
+			v-if="archive.archive_title"
+			class="page-header"
+		>
+
+			<h1 class="page-title">Archives: <span>{{ archive.archive_title }}</span></h1>
+
+			<div
+				v-if="archive.archive_description"
+				class="archive-description"
+			>
+				<p>{{ archive.archive_description }}</p>
+			</div>
+
+		</header>
 
 		<NewsItem
 			v-for="post in posts"
@@ -26,7 +42,7 @@ import NewsPagination from './news/NewsPagination.vue'
 
 export default {
 
-	name: 'NewsContent',
+	name: 'ArchiveContent',
 	components: {
 		NewsItem,
 		NewsPagination
@@ -44,11 +60,74 @@ export default {
 			error: null,
 			posts: [],
 			number_news: 0,
-			current_page: 1
+			current_page: 1,
+			archive: {
+				archive_title: null,
+				archive_description: null
+			}
 		}
 
 	},
 	methods: {
+
+		/*
+		* Get archive data
+		*/
+		getArchiveData() {
+
+			let data = {
+				action: 'mx_get_archive_data',
+				nonce: this.mx_data.nonce,
+				extra: '&post_id=' + this.mx_data.post_id + '&current_page=' + this.current_page + '&limit=' + this.mx_data.pagination.posts_per_page + '&post_type=' + this.mx_data.post_type
+			}
+
+			this.ajaxRequestArchiveData( this.mx_data.ajax_url, data )
+
+		},
+
+		/*
+		* AJAX Request Archive Data
+		*/
+		ajaxRequestArchiveData( ajax_url, data ) {
+
+			const _this = this
+
+			let xhr = new XMLHttpRequest()
+
+			xhr.open( "POST", ajax_url, true )
+
+			xhr.setRequestHeader( "Content-Type", "application/x-www-form-urlencoded;charset=UTF-8" )
+
+			xhr.onreadystatechange = function() {
+
+				if ( this.readyState === XMLHttpRequest.DONE && this.status === 200 ) {
+
+					if( _this.isJSON( this.responseText ) ) {
+
+						_this.archive = JSON.parse( this.responseText )
+
+						_this.error = null
+
+					}
+
+				}
+				else if (this.status == 400) {
+
+					_this.error = 'Error 400'
+
+				}
+				else {
+
+					_this.error = 'Unexpected Error'
+
+				}
+			}
+
+			let query = `action=${data.action}&nonce=${data.nonce}${data.extra}`
+
+			xhr.send( query )
+
+		},
 
 		/*
 		* Set page
@@ -261,6 +340,8 @@ export default {
 
 	},
 	mounted() {
+
+		this.getArchiveData()
 		
 		this.getNumberNews()
 

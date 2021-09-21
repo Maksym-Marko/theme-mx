@@ -3,7 +3,8 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class ThemeMXBasicTemplate {
+class ThemeMXBasicTemplate
+{
 
 	public $post_type = 'page';
 

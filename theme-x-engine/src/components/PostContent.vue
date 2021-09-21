@@ -1,5 +1,5 @@
 <template>
-	<main class="mx-post-body">
+	<main class="mx-post-body mx-site-main">
 
 		<div
 			v-if="!error"
