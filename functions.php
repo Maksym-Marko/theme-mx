@@ -209,6 +209,11 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 }
 
 /**
+ * MX Theme Helpers.
+ */
+require get_template_directory() . '/theme-mx-engine/theme-mx-helpers.php';
+
+/**
  * MX Theme Main Class.
  */
 require get_template_directory() . '/theme-mx-engine/theme-mx-engine.php';

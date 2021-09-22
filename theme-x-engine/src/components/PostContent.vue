@@ -4,62 +4,16 @@
 		<div
 			v-if="!error"
 		>
-			
-			<article :id="'post-' + the_post.ID">
-				
-				<header class="entry-header">
 
-					<h1
-						class="entry-title"
-						v-html="the_post.post_title"
-					>
-					</h1>
+			<PostItem
+				:the_post="the_post"
+			/>
 
-					<div class="entry-meta">
-						
-						<div
-							v-if="parseInt( the_post.get_the_time ) !== parseInt( the_post.get_the_modified_time )"
-						>
-
-							<time class="entry-date published" :datetime="the_post.post_date_date_w3c">
-								{{ the_post.get_the_date }}
-							</time>
-							<time class="updated" :datetime="the_post.get_the_modified_date_date_w3c">
-								{{ the_post.get_the_modified_date }}
-							</time>
-							
-						</div>
-						<div
-							v-else
-						>
-						
-							<time
-								class="entry-date published updated"
-								:datetime="the_post.post_date_date_w3c">
-								{{ the_post.get_the_date }}
-							</time>
-
-						</div>
-
-					</div>
-
-				</header>
-
-				<div class="mx-thumbnail"
-					v-if="the_post.thumbnails.full"
-				>
-
-					<img :src="the_post.thumbnails.medium" alt="" />
-
-				</div>
-
-				<div
-					class="mx-the-content"
-					v-if="the_post.post_content"
-					v-html="the_post.post_content"
-				></div>
-
-			</article>
+			<PostNavigation
+				v-if="navigation.prev_post || navigation.next_post"
+				:navigation="navigation"
+				@go_to_post="setNewPost"
+			/>			
 
 		</div>
 		<div
@@ -74,9 +28,16 @@
 </template>
 
 <script>
+	import PostItem from './post/PostItem.vue'
+	import PostNavigation from './post/PostNavigation.vue'
+
 	export default {
 
 		name: 'PostContent',
+		components: {
+			PostItem,
+			PostNavigation
+		},
 		props: {
 			mx_data: {
 				type: Object,
@@ -93,15 +54,104 @@
 						large: null
 					}
 				},
+				navigation: {
+					next_post: null,
+					prev_post: null
+				},
 				error: null
 			}
 		},
 		methods: {
 
+			setNewPost( post_data ) {
+
+				this.getPostContent( post_data.ID, post_data.post_type )
+
+				this.getPostNavigation( post_data.ID, post_data.post_type )
+
+			},
+
 			/*
-			* Get Page content
+			* Get Post Navigation
 			*/
-			getPostContent() {
+			getPostNavigation( post_id = null, post_type = null ) {
+
+				if( this.mx_data.posts_navigation === 'enable' ) {
+
+					let data = {
+						action: 'mx_get_post_navigation',
+						nonce: this.mx_data.nonce,
+						extra: '&post_id=' + this.mx_data.post_id + '&post_type=' + this.mx_data.post_type
+					}
+
+					if( post_id !== null &&  post_type !== null ) {
+
+						data = {
+							action: 'mx_get_post_navigation',
+							nonce: this.mx_data.nonce,
+							extra: '&post_id=' + post_id + '&post_type=' + post_type
+						}
+
+					}
+
+					this.ajaxRequestNavigation( this.mx_data.ajax_url, data )
+
+				}
+
+			},
+
+			/*
+			* AJAX Request. Post Navigation
+			*/
+			ajaxRequestNavigation( ajax_url, data ) {
+
+				const _this = this
+
+				let xhr = new XMLHttpRequest()
+
+				xhr.open( "POST", ajax_url, true )
+
+				xhr.setRequestHeader( "Content-Type", "application/x-www-form-urlencoded;charset=UTF-8" )
+
+				xhr.onreadystatechange = function() {
+
+					if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+
+						if( _this.isJSON( this.responseText ) ) {
+
+							_this.navigation = JSON.parse( this.responseText )
+
+							_this.error = null
+
+						} else {
+
+							_this.error = 'Something went wrong with Post content getting!'
+
+						}						
+
+					}
+					else if (this.status == 400) {
+
+						_this.error = 'Error 400'
+
+					}
+					else {
+
+						_this.error = 'Unexpected Error'
+
+					}
+				}
+
+				let query = `action=${data.action}&nonce=${data.nonce}${data.extra}`
+
+				xhr.send( query )
+
+			},
+
+			/*
+			* Get Post content
+			*/
+			getPostContent( post_id = null, post_type = null ) {
 
 				let data = {
 					action: 'mx_get_post_content',
@@ -109,12 +159,22 @@
 					extra: '&post_id=' + this.mx_data.post_id + '&post_type=' + this.mx_data.post_type
 				}
 
+				if( post_id !== null &&  post_type !== null ) {
+
+					data = {
+						action: 'mx_get_post_content',
+						nonce: this.mx_data.nonce,
+						extra: '&post_id=' + post_id + '&post_type=' + post_type
+					}
+
+				}
+
 				this.ajaxRequest( this.mx_data.ajax_url, data )
 
 			},
 
 			/*
-			* AJAX Request
+			* AJAX Request. Get Post
 			*/
 			ajaxRequest( ajax_url, data ) {
 
@@ -173,7 +233,11 @@
 		},
 		mounted() {
 
+			// Get Post Content
 			this.getPostContent()
+
+			// Get Post Navigation
+			this.getPostNavigation()
 			
 		}
 

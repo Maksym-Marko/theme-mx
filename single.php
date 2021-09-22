@@ -10,7 +10,11 @@
 get_header();
 
 // render default post template
-( new ThemeMXBasicTemplate() )->render();
+( new ThemeMXPostTemplate( [
+
+    'navigation' => 'enable'
+
+] ) )->render();
 
 // get_sidebar();
 get_footer();

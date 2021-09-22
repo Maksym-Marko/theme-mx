@@ -655,6 +655,12 @@ textarea {
 
 /* Navigation
 --------------------------------------------- */
+ul.mx-posts-navigation {
+	display: flex;
+	justify-content: space-around;
+	margin-top: 50px;
+}
+
 ul.mx-news-pagination {
 	display: flex;
 	justify-content: center;

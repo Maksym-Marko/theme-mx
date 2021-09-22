@@ -13,6 +13,7 @@ get_header();
 // render default post template
 ( new ThemeMXCPTmxtpfmt_booksTemplate( [
 
+    'navigation' => 'enable',
     'cpt_data' => 'Some CPT Data'
 
 ] ) )->render();

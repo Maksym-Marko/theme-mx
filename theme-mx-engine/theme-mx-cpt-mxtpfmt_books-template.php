@@ -9,7 +9,7 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class ThemeMXCPTmxtpfmt_booksTemplate extends ThemeMXBasicTemplate
+class ThemeMXCPTmxtpfmt_booksTemplate extends ThemeMXPostTemplate
 {
 
 	public $cpt_data = '';
