@@ -80,6 +80,8 @@ class ThemeMXBasicTemplate
 
 				$script .= '"ajax_url":"' 	. admin_url( "admin-ajax.php" ) . '",';
 
+				$script .= '"rest_url":"' 	. esc_url( get_rest_url() ) . '",';				
+
 				$script .= '"nonce":"' 	. wp_create_nonce( 'theme_mx_get_content_nonce' ) . '"';			
 
 			$script .= '};';

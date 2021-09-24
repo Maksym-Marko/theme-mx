@@ -48,56 +48,46 @@ class ThemeMXPostTemplate extends ThemeMXBasicTemplate
 }
 
 /*
-* Set AJAX actions
+* Posts Navigation
 */
-// get news
-if ( ! function_exists( 'mx_get_post_navigation_func' ) ) :
+if ( ! function_exists( 'theme_mx_posts_navigation' ) ) :
 
-	add_action( 'wp_ajax_mx_get_post_navigation', 'mx_get_post_navigation_func' );
+	function theme_mx_posts_navigation( $request ) {
 
-	add_action( 'wp_ajax_nopriv_mx_get_post_navigation', 'mx_get_post_navigation_func' );
+		$post_type = $request['post_type'];
 
-	function mx_get_post_navigation_func() {
+		$post_id = $request['post_id'];
 
-		// Check out if POST nonce is not empty
-		if( empty( $_POST['nonce'] ) ) wp_die( '0' );
+		$next_post = mx_get_next_post( $post_id, $post_type );
 
-		// Check out if nonce's matched
-		if( wp_verify_nonce( $_POST['nonce'], 'theme_mx_get_content_nonce' ) ) {
+		$prev_post = mx_get_prev_post( $post_id, $post_type );
 
-			if( isset( $_POST['post_id'] ) AND isset( $_POST['post_type'] ) ) {
+		$navigation = [];
 
-				$post_id = sanitize_text_field( $_POST['post_id'] );
+		if( $next_post !== NULL ) {
 
-				$post_type = sanitize_text_field( $_POST['post_type'] );
-
-				$next_post = mx_get_next_post( $post_id, $post_type );
-
-				$prev_post = mx_get_prev_post( $post_id, $post_type );
-
-				$navigation = [];
-
-				if( $next_post !== NULL ) {
-
-					$navigation['next_post'] = $next_post;
-
-				}
-
-				if( $prev_post !== NULL ) {
-
-					$navigation['prev_post'] = $prev_post;
-
-				}
-
-				echo json_encode( $navigation );
-
-			}			
+			$navigation['next_post'] = $next_post;
 
 		}
 
-		wp_die();
+		if( $prev_post !== NULL ) {
+
+			$navigation['prev_post'] = $prev_post;
+
+		}
+
+		return $navigation;
 
 	}
 
-endif;
+	add_action( 'rest_api_init', function () {
 
+	    register_rest_route( 'theme_mx/v1', '/navigation/post_type=(?P<post_type>[a-zA-Z0-9_-]+)/post_id=(?P<post_id>\d+)', array(
+	        'methods' => 'GET',
+	        'callback' => 'theme_mx_posts_navigation',
+	        'permission_callback' => null
+	    ) );
+
+	} );
+
+endif;

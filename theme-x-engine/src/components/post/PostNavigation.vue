@@ -58,6 +58,8 @@ export default {
 
 			history.pushState( state, title, url )
 
+			console.log( post_data )
+
 		}
 
 	},

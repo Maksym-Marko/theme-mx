@@ -209,6 +209,11 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 }
 
 /**
+ * REST API registration.
+ */
+require get_template_directory() . '/theme-mx-engine/rest.php';
+
+/**
  * MX Theme Helpers.
  */
 require get_template_directory() . '/theme-mx-engine/theme-mx-helpers.php';

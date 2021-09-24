@@ -28,8 +28,11 @@
 </template>
 
 <script>
+
 	import PostItem from './post/PostItem.vue'
 	import PostNavigation from './post/PostNavigation.vue'
+
+	const axios = require('axios')
 
 	export default {
 
@@ -47,18 +50,14 @@
 		data() {
 			return {
 				the_post: {
-					thumbnails: {
-						full: null,
-						medium: null,
-						thumbnail: null,
-						large: null
-					}
+					thumbnails: {}
 				},
 				navigation: {
 					next_post: null,
 					prev_post: null
 				},
-				error: null
+				error: null,
+				res: null
 			}
 		},
 		methods: {
@@ -74,161 +73,82 @@
 			/*
 			* Get Post Navigation
 			*/
-			getPostNavigation( post_id = null, post_type = null ) {
+			async getPostNavigation( post_id = null, post_type = null ) {
 
 				if( this.mx_data.posts_navigation === 'enable' ) {
 
-					let data = {
-						action: 'mx_get_post_navigation',
-						nonce: this.mx_data.nonce,
-						extra: '&post_id=' + this.mx_data.post_id + '&post_type=' + this.mx_data.post_type
-					}
+					const _this = this
 
-					if( post_id !== null &&  post_type !== null ) {
+					let rest_route = this.mx_data.rest_url + 'theme_mx/v1/navigation/post_type=' + this.mx_data.post_type + '/post_id=' + this.mx_data.post_id
 
-						data = {
-							action: 'mx_get_post_navigation',
-							nonce: this.mx_data.nonce,
-							extra: '&post_id=' + post_id + '&post_type=' + post_type
-						}
+					if( post_id !== null && post_type !== null ) {
+
+						rest_route = this.mx_data.rest_url + 'theme_mx/v1/navigation/post_type=' + post_type + '/post_id=' + post_id
 
 					}
 
-					this.ajaxRequestNavigation( this.mx_data.ajax_url, data )
+					try {
+
+						let res = await axios.get( rest_route );
+
+						_this.navigation = res.data
+
+					} catch (err) {
+
+						_this.error = err.response.data.message
+
+						console.error( err.response.data );
+
+					}
 
 				}
-
-			},
-
-			/*
-			* AJAX Request. Post Navigation
-			*/
-			ajaxRequestNavigation( ajax_url, data ) {
-
-				const _this = this
-
-				let xhr = new XMLHttpRequest()
-
-				xhr.open( "POST", ajax_url, true )
-
-				xhr.setRequestHeader( "Content-Type", "application/x-www-form-urlencoded;charset=UTF-8" )
-
-				xhr.onreadystatechange = function() {
-
-					if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-
-						if( _this.isJSON( this.responseText ) ) {
-
-							_this.navigation = JSON.parse( this.responseText )
-
-							_this.error = null
-
-						} else {
-
-							_this.error = 'Something went wrong with Post content getting!'
-
-						}						
-
-					}
-					else if (this.status == 400) {
-
-						_this.error = 'Error 400'
-
-					}
-					else {
-
-						_this.error = 'Unexpected Error'
-
-					}
-				}
-
-				let query = `action=${data.action}&nonce=${data.nonce}${data.extra}`
-
-				xhr.send( query )
 
 			},
 
 			/*
 			* Get Post content
 			*/
-			getPostContent( post_id = null, post_type = null ) {
-
-				let data = {
-					action: 'mx_get_post_content',
-					nonce: this.mx_data.nonce,
-					extra: '&post_id=' + this.mx_data.post_id + '&post_type=' + this.mx_data.post_type
-				}
-
-				if( post_id !== null &&  post_type !== null ) {
-
-					data = {
-						action: 'mx_get_post_content',
-						nonce: this.mx_data.nonce,
-						extra: '&post_id=' + post_id + '&post_type=' + post_type
-					}
-
-				}
-
-				this.ajaxRequest( this.mx_data.ajax_url, data )
-
-			},
-
-			/*
-			* AJAX Request. Get Post
-			*/
-			ajaxRequest( ajax_url, data ) {
+			async getPostContent( post_id = null, post_type = null ) {
 
 				const _this = this
 
-				let xhr = new XMLHttpRequest()
+				let post_anchor = 'posts';
 
-				xhr.open( "POST", ajax_url, true )
+				if( this.mx_data.post_type !== 'post' ) {
 
-				xhr.setRequestHeader( "Content-Type", "application/x-www-form-urlencoded;charset=UTF-8" )
+					post_anchor = this.mx_data.post_type
 
-				xhr.onreadystatechange = function() {
+				}				
 
-					if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+				let rest_route = this.mx_data.rest_url + 'wp/v2/' + post_anchor + '/' + this.mx_data.post_id
 
-						if( _this.isJSON( this.responseText ) ) {
+				if( post_id !== null &&  post_type !== null ) {
 
-							_this.the_post = JSON.parse( this.responseText )
+					if( post_type !== 'post' ) {
 
-							_this.error = null
-
-						} else {
-
-							_this.error = 'Something went wrong with Post content getting!'
-
-						}						
+						post_anchor = post_type
 
 					}
-					else if (this.status == 400) {
 
-						_this.error = 'Error 400'
+					rest_route = this.mx_data.rest_url + 'wp/v2/' + post_anchor + '/' + post_id
 
-					}
-					else {
-
-						_this.error = 'Unexpected Error'
-
-					}
 				}
 
-				let query = `action=${data.action}&nonce=${data.nonce}${data.extra}`
-
-				xhr.send( query )
-
-			},
-
-			isJSON( str ) {
 				try {
-					JSON.parse(str);
-				} catch (e) {
-					return false;
+
+					let res = await axios.get( rest_route );
+
+					_this.the_post = res.data
+
+				} catch (err) {
+
+					_this.error = err.response.data.message
+
+					console.error( err.response.data );
+
 				}
-				return true;
-			}
+
+			}		
 
 		},
 		mounted() {

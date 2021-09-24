@@ -1,40 +1,23 @@
 <template>
 
-	<article :id="'post-' + the_post.ID">
+	<article :id="'post-' + the_post.id">
 				
 		<header class="entry-header">
 
 			<h1
 				class="entry-title"
-				v-html="the_post.post_title"
+				v-if="the_post.title"
+				v-html="the_post.title.rendered"
 			>
 			</h1>
 
 			<div class="entry-meta">
 				
-				<div
-					v-if="parseInt( the_post.get_the_time ) !== parseInt( the_post.get_the_modified_time )"
-				>
-
-					<time class="entry-date published" :datetime="the_post.post_date_date_w3c">
-						{{ the_post.get_the_date }}
-					</time>
-					<time class="updated" :datetime="the_post.get_the_modified_date_date_w3c">
-						{{ the_post.get_the_modified_date }}
-					</time>
-					
-				</div>
-				<div
-					v-else
-				>
-				
-					<time
-						class="entry-date published updated"
-						:datetime="the_post.post_date_date_w3c">
-						{{ the_post.get_the_date }}
-					</time>
-
-				</div>
+				<time
+					class="entry-date published"
+					:datetime="the_post.modified_gmt">
+					{{ the_post.date }}
+				</time>
 
 			</div>
 
@@ -50,8 +33,8 @@
 
 		<div
 			class="mx-the-content"
-			v-if="the_post.post_content"
-			v-html="the_post.post_content"
+			v-if="the_post.content"
+			v-html="the_post.content.rendered"
 		></div>
 
 	</article>
@@ -71,16 +54,25 @@ export default {
 	data() {
 
 		return {
-
+			
 		}
 
 	},
 	methods: {
 
+		
+
+	},
+	watch: {
+		the_post() {
+
+			// console.log( this.the_post )
+			
+		}
 	},
 	mounted() {
 
-		// console.log( this.the_post )
+		
 
 	}
 
