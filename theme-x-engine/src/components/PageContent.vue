@@ -69,7 +69,7 @@ export default {
 			/*
 			* Get Page content
 			*/
-			async getPostContent() {
+			async getPageContent() {
 
 				const _this = this
 
@@ -108,7 +108,7 @@ export default {
 		},
 		mounted() {
 
-			this.getPostContent()
+			this.getPageContent()
 
 			this.checkError()
 			

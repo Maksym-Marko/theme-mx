@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 */
 if ( ! function_exists( 'theme_mx_get_menus' ) ) :
 
-	function theme_mx_get_menus( WP_REST_Request $request ) {
+	function theme_mx_get_menus( $request ) {
 
 		$menu_id = $request['menu'];
 
@@ -88,9 +88,7 @@ if ( ! function_exists( 'theme_mx_get_cpt_posts' ) ) :
 
 	function theme_mx_get_cpt_posts( $route, $post ) {
 
-		mx_debug_to_file( $post );
-
-        if ( $post->post_type !== 'post' || $post->post_type !== 'page' ) {
+        if ( $post->post_type !== 'post' AND $post->post_type !== 'page' ) {
 
 	        $route = '/wp/v2/' . $post->post_type . '/' . $post->ID;
 
@@ -100,5 +98,106 @@ if ( ! function_exists( 'theme_mx_get_cpt_posts' ) ) :
 
 	}
 	add_filter( 'rest_route_for_post', 'theme_mx_get_cpt_posts', 10, 2 );
+
+endif;
+
+/*
+* Get number of posts
+*/
+if ( ! function_exists( 'theme_mx_get_posts_count' ) ) :
+
+	
+	function theme_mx_get_posts_count( $request ) {
+
+		$post_type = $request['post_type'];
+
+		if( post_type_exists( $post_type ) ) {
+
+			$post_type = sanitize_text_field( $post_type );
+
+			global $wpdb;
+
+			$posts_table = $wpdb->prefix . 'posts';
+
+			$number_posts = $wpdb->get_var(
+				"SELECT COUNT(ID)
+					FROM $posts_table
+					WHERE post_type = '$post_type'
+					AND post_status = 'publish'
+				"
+			);
+
+			return intval( $number_posts );
+
+		} else {
+
+			return new WP_Error( 'post_type_not_found', 'Post Type not found', [ 'status' => 404 ] );
+
+		}
+
+	}
+
+	add_action( 'rest_api_init', function () {
+
+	    register_rest_route( 'theme_mx/v1', '/count/post_type=(?P<post_type>[a-zA-Z0-9_-]+)', array(
+	        'methods' => 'GET',
+	        'callback' => 'theme_mx_get_posts_count',
+	        'permission_callback' => null
+	    ) );
+
+	} );
+	
+
+endif;
+
+/*
+* Get Archive
+*/
+if ( ! function_exists( 'theme_mx_get_archive_data' ) ) :
+
+	function theme_mx_get_archive_data( $request ) {
+
+		$post_type = $request['post_type'];
+
+		if( post_type_exists( $post_type ) ) {
+
+			$get_archives = get_post_type_object( $post_type );
+
+			$archive_data = [];
+
+			if( $get_archives ) {
+
+				$archive_title = $get_archives->label;
+
+				$archive_description = $get_archives->description;
+
+				$archive_data = [
+
+					'archive_title' 		=> $archive_title,
+					'archive_description' 	=> $archive_description
+
+				];
+
+			}
+
+			return $archive_data;
+
+		} else {
+
+			return new WP_Error( 'archive_not_found', 'Archive not found', [ 'status' => 404 ] );
+
+		}
+
+	}
+
+	add_action( 'rest_api_init', function () {
+
+	    register_rest_route( 'theme_mx/v1', '/archive/post_type=(?P<post_type>[a-zA-Z0-9_-]+)', array(
+	        'methods' => 'GET',
+	        'callback' => 'theme_mx_get_archive_data',
+	        'permission_callback' => null
+	    ) );
+
+	} );
 
 endif;

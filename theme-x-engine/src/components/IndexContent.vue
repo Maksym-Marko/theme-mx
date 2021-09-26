@@ -1,10 +1,10 @@
 <template>
 
-	<main class="mx-index mx-site-main">
+	<main class="mx-index-body mx-site-main">
 
 		<Item
 			v-for="post in posts"
-			:key="post.ID"
+			:key="post.id"
 			:the_post="post"
 		/>
 
@@ -23,6 +23,8 @@
 <script>
 import Item from './index/Item.vue'
 import Pagination from './index/Pagination.vue'
+
+const axios = require('axios')
 
 export default {
 
@@ -57,125 +59,77 @@ export default {
 
 			this.current_page = page
 
-			this.getNews()
+			this.getItems()
 
 		},
 
 		/*
-		* Get news
+		* Get Items
 		*/
-		getNews() {
-
-			let data = {
-				action: 'mx_get_news',
-				nonce: this.mx_data.nonce,
-				extra: '&post_id=' + this.mx_data.post_id + '&current_page=' + this.current_page + '&limit=' + this.mx_data.pagination.posts_per_page + '&post_type=' + this.mx_data.post_type
-			}
-
-			this.ajaxRequestGetNews( this.mx_data.ajax_url, data )
-
-		},
-
-		/*
-		* AJAX Request Get News
-		*/
-		ajaxRequestGetNews( ajax_url, data ) {
+		async getItems( post_type = null ) {
 
 			const _this = this
 
-			let xhr = new XMLHttpRequest()
+			let post_anchor = 'posts';
 
-			xhr.open( "POST", ajax_url, true )
+			if( this.mx_data.post_type !== 'post' ) {
 
-			xhr.setRequestHeader( "Content-Type", "application/x-www-form-urlencoded;charset=UTF-8" )
+				post_anchor = this.mx_data.post_type
 
-			xhr.onreadystatechange = function() {
+			}				
 
-				if ( this.readyState === XMLHttpRequest.DONE && this.status === 200 ) {
+			let rest_route = this.mx_data.rest_url + 'wp/v2/' + post_anchor + '?per_page=' + this.mx_data.pagination.posts_per_page + '&page=' + this.current_page + '&order=desc&orderby=date'
 
-					if( _this.isJSON( this.responseText ) ) {
+			if( post_type !== null ) {
 
-						_this.posts = JSON.parse( this.responseText )
+				if( post_type !== 'post' ) {
 
-						_this.error = null
-
-					}
+					post_anchor = post_type
 
 				}
-				else if (this.status == 400) {
 
-					_this.error = 'Error 400'
+				rest_route = this.mx_data.rest_url + 'wp/v2/' + post_anchor + '?per_page=' + this.mx_data.pagination.posts_per_page + '&page=' + this.current_page + '&order=desc&orderby=date'
 
-				}
-				else {
-
-					_this.error = 'Unexpected Error'
-
-				}
 			}
 
-			let query = `action=${data.action}&nonce=${data.nonce}${data.extra}`
+			try {
 
-			xhr.send( query )
+				let res = await axios.get( rest_route )
 
-		},
+				_this.posts = res.data
 
-		/*
-		* Get Number of News
-		*/
-		getNumberNews() {
+			} catch (err) {
 
-			let data = {
-				action: 'mx_get_number_news',
-				nonce: this.mx_data.nonce,
-				extra: '&post_type=' + this.mx_data.post_type
+				_this.error = err.response.data.message
+
+				console.error( err.response.data );
+
 			}
 
-			this.ajaxRequestGetNumberNews( this.mx_data.ajax_url, data )
-
 		},
-
+		
 		/*
-		* AJAX Request Get Number of News
+		* Get Number of Items
 		*/
-		ajaxRequestGetNumberNews( ajax_url, data ) {
+		async getNumberNews() {
 
 			const _this = this
 
-			let xhr = new XMLHttpRequest()
+			let rest_route = this.mx_data.rest_url + 'theme_mx/v1/count/post_type=' + this.mx_data.post_type
 
-			xhr.open( "POST", ajax_url, true )
+			try {
 
-			xhr.setRequestHeader( "Content-Type", "application/x-www-form-urlencoded;charset=UTF-8" )
+				let res = await axios.get( rest_route )
 
-			xhr.onreadystatechange = function() {
+				_this.number_news = res.data
 
-				if ( this.readyState === XMLHttpRequest.DONE && this.status === 200 ) {
+			} catch (err) {
 
-					if( this.responseText ) {
+				_this.error = err.response.data.message
 
-						_this.number_news = parseInt( this.responseText )
+				console.error( err.response.data );
 
-						_this.error = null
-
-					}
-
-				}
-				else if (this.status == 400) {
-
-					_this.error = 'Error 400'
-
-				}
-				else {
-
-					_this.error = 'Unexpected Error'
-
-				}
-			}
-
-			let query = `action=${data.action}&nonce=${data.nonce}${data.extra}`
-
-			xhr.send( query )
+			}			
 
 		},
 
@@ -223,15 +177,6 @@ export default {
 
 		},
 
-		isJSON( str ) {
-			try {
-				JSON.parse(str);
-			} catch (e) {
-				return false;
-			}
-			return true;
-		},
-
 		checkError() {
 
 			setTimeout( () => {
@@ -251,10 +196,8 @@ export default {
 
 		number_news() {
 
-			this.getCurrentPage()			
+			this.getCurrentPage()
 		
-			this.getNews()
-
 			this.checkError()
 
 		}
@@ -263,6 +206,8 @@ export default {
 	mounted() {
 		
 		this.getNumberNews()
+
+		this.getItems()
 
 	}
 

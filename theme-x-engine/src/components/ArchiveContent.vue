@@ -1,6 +1,6 @@
 <template>
 
-	<main class="mx-archive mx-site-main">
+	<main class="mx-archive-body mx-site-main">
 
 		<header
 			v-if="archive.archive_title"
@@ -18,13 +18,13 @@
 
 		</header>
 
-		<NewsItem
+		<Item
 			v-for="post in posts"
-			:key="post.ID"
+			:key="post.id"
 			:the_post="post"
 		/>
 
-		<NewsPagination
+		<Pagination
 			v-if="mx_data.pagination.enable"
 			:pagination="mx_data.pagination"
 			:number_news="number_news"
@@ -37,15 +37,17 @@
 </template>
 
 <script>
-import NewsItem from './news/NewsItem.vue'
-import NewsPagination from './news/NewsPagination.vue'
+import Item from './index/Item.vue'
+import Pagination from './index/Pagination.vue'
+
+const axios = require('axios')
 
 export default {
 
 	name: 'ArchiveContent',
 	components: {
-		NewsItem,
-		NewsPagination
+		Item,
+		Pagination
 	},
 	props: {
 		mx_data: {
@@ -73,61 +75,27 @@ export default {
 		/*
 		* Get archive data
 		*/
-		getArchiveData() {
+		async getArchiveData() {
 
-			let data = {
-				action: 'mx_get_archive_data',
-				nonce: this.mx_data.nonce,
-				extra: '&post_id=' + this.mx_data.post_id + '&current_page=' + this.current_page + '&limit=' + this.mx_data.pagination.posts_per_page + '&post_type=' + this.mx_data.post_type
+			const _this = this			
+
+			let rest_route = this.mx_data.rest_url + 'theme_mx/v1/archive/post_type=' + this.mx_data.post_type
+
+			try {
+
+				let res = await axios.get( rest_route )
+
+				_this.archive = res.data
+
+			} catch (err) {
+
+				_this.error = err.response.data.message
+
+				console.error( err.response.data );
+
 			}
 
-			this.ajaxRequestArchiveData( this.mx_data.ajax_url, data )
-
-		},
-
-		/*
-		* AJAX Request Archive Data
-		*/
-		ajaxRequestArchiveData( ajax_url, data ) {
-
-			const _this = this
-
-			let xhr = new XMLHttpRequest()
-
-			xhr.open( "POST", ajax_url, true )
-
-			xhr.setRequestHeader( "Content-Type", "application/x-www-form-urlencoded;charset=UTF-8" )
-
-			xhr.onreadystatechange = function() {
-
-				if ( this.readyState === XMLHttpRequest.DONE && this.status === 200 ) {
-
-					if( _this.isJSON( this.responseText ) ) {
-
-						_this.archive = JSON.parse( this.responseText )
-
-						_this.error = null
-
-					}
-
-				}
-				else if (this.status == 400) {
-
-					_this.error = 'Error 400'
-
-				}
-				else {
-
-					_this.error = 'Unexpected Error'
-
-				}
-			}
-
-			let query = `action=${data.action}&nonce=${data.nonce}${data.extra}`
-
-			xhr.send( query )
-
-		},
+		},		
 
 		/*
 		* Set page
@@ -136,125 +104,65 @@ export default {
 
 			this.current_page = page
 
-			this.getNews()
+			this.getItems()
 
 		},
 
 		/*
-		* Get news
+		* Get Items
 		*/
-		getNews() {
-
-			let data = {
-				action: 'mx_get_news',
-				nonce: this.mx_data.nonce,
-				extra: '&post_id=' + this.mx_data.post_id + '&current_page=' + this.current_page + '&limit=' + this.mx_data.pagination.posts_per_page + '&post_type=' + this.mx_data.post_type
-			}
-
-			this.ajaxRequestGetNews( this.mx_data.ajax_url, data )
-
-		},
-
-		/*
-		* AJAX Request Get News
-		*/
-		ajaxRequestGetNews( ajax_url, data ) {
+		async getItems() {
 
 			const _this = this
 
-			let xhr = new XMLHttpRequest()
+			let post_anchor = 'posts';
 
-			xhr.open( "POST", ajax_url, true )
+			if( this.mx_data.post_type !== 'post' ) {
 
-			xhr.setRequestHeader( "Content-Type", "application/x-www-form-urlencoded;charset=UTF-8" )
+				post_anchor = this.mx_data.post_type
 
-			xhr.onreadystatechange = function() {
+			}				
 
-				if ( this.readyState === XMLHttpRequest.DONE && this.status === 200 ) {
+			let rest_route = this.mx_data.rest_url + 'wp/v2/' + post_anchor + '?per_page=' + this.mx_data.pagination.posts_per_page + '&page=' + this.current_page + '&order=desc&orderby=date'
 
-					if( _this.isJSON( this.responseText ) ) {
+			try {
 
-						_this.posts = JSON.parse( this.responseText )
+				let res = await axios.get( rest_route )
 
-						_this.error = null
+				_this.posts = res.data
 
-					}
+			} catch (err) {
 
-				}
-				else if (this.status == 400) {
+				_this.error = err.response.data.message
 
-					_this.error = 'Error 400'
+				console.error( err.response.data );
 
-				}
-				else {
-
-					_this.error = 'Unexpected Error'
-
-				}
 			}
 
-			let query = `action=${data.action}&nonce=${data.nonce}${data.extra}`
-
-			xhr.send( query )
-
 		},
-
+		
 		/*
-		* Get Number of News
+		* Get Number of Items
 		*/
-		getNumberNews() {
-
-			let data = {
-				action: 'mx_get_number_news',
-				nonce: this.mx_data.nonce,
-				extra: '&post_type=' + this.mx_data.post_type
-			}
-
-			this.ajaxRequestGetNumberNews( this.mx_data.ajax_url, data )
-
-		},
-
-		/*
-		* AJAX Request Get Number of News
-		*/
-		ajaxRequestGetNumberNews( ajax_url, data ) {
+		async getNumberNews() {
 
 			const _this = this
 
-			let xhr = new XMLHttpRequest()
+			let rest_route = this.mx_data.rest_url + 'theme_mx/v1/count/post_type=' + this.mx_data.post_type
 
-			xhr.open( "POST", ajax_url, true )
+			try {
 
-			xhr.setRequestHeader( "Content-Type", "application/x-www-form-urlencoded;charset=UTF-8" )
+				let res = await axios.get( rest_route )
 
-			xhr.onreadystatechange = function() {
+				_this.number_news = res.data
 
-				if ( this.readyState === XMLHttpRequest.DONE && this.status === 200 ) {
+			} catch (err) {
 
-					if( this.responseText ) {
+				_this.error = err.response.data.message
 
-						_this.number_news = parseInt( this.responseText )
+				console.error( err.response.data );
 
-						_this.error = null
-
-					}
-
-				}
-				else if (this.status == 400) {
-
-					_this.error = 'Error 400'
-
-				}
-				else {
-
-					_this.error = 'Unexpected Error'
-
-				}
-			}
-
-			let query = `action=${data.action}&nonce=${data.nonce}${data.extra}`
-
-			xhr.send( query )
+			}			
 
 		},
 
@@ -302,15 +210,6 @@ export default {
 
 		},
 
-		isJSON( str ) {
-			try {
-				JSON.parse(str);
-			} catch (e) {
-				return false;
-			}
-			return true;
-		},
-
 		checkError() {
 
 			setTimeout( () => {
@@ -330,10 +229,8 @@ export default {
 
 		number_news() {
 
-			this.getCurrentPage()			
+			this.getCurrentPage()
 		
-			this.getNews()
-
 			this.checkError()
 
 		}
@@ -344,6 +241,8 @@ export default {
 		this.getArchiveData()
 		
 		this.getNumberNews()
+
+		this.getItems()
 
 	}
 

@@ -1,6 +1,6 @@
 <template>
 
-	<article :id="'post-' + the_post.ID">
+	<article :id="'post-' + the_post.id">
 
 		<header class="entry-header">
 
@@ -8,36 +8,18 @@
 				class="entry-title"
 			>
 				<a
-					:href="the_post.permalink"
-					v-html="the_post.post_title"
+					:href="the_post.link"
+					v-html="the_post.title.rendered"
 				></a>
 			</h1>
 
 			<div class="entry-meta">
-				
-				<div
-					v-if="parseInt( the_post.get_the_time ) !== parseInt( the_post.get_the_modified_time )"
-				>
-
-					<time class="entry-date published" :datetime="the_post.post_date_date_w3c">
-						{{ the_post.get_the_date }}
-					</time>
-					<time class="updated" :datetime="the_post.get_the_modified_date_date_w3c">
-						{{ the_post.get_the_modified_date }}
-					</time>
 					
-				</div>
-				<div
-					v-else
-				>
-				
-					<time
-						class="entry-date published updated"
-						:datetime="the_post.post_date_date_w3c">
-						{{ the_post.get_the_date }}
-					</time>
-
-				</div>
+				<time
+					class="entry-date published"
+					:datetime="the_post.modified_gmt">
+					{{ the_post.date }}
+				</time>
 
 			</div>
 
@@ -52,8 +34,8 @@
 
 		<div
 			class="mx-the-excerpt"
-			v-if="the_post.post_excerpt"
-			v-html="the_post.post_excerpt"
+			v-if="the_post.excerpt"
+			v-html="the_post.excerpt.rendered"
 		></div>
 
 	</article>
