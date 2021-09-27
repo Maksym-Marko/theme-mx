@@ -197,6 +197,8 @@ export default {
 		number_news() {
 
 			this.getCurrentPage()
+
+			this.getItems()
 		
 			this.checkError()
 
@@ -205,9 +207,7 @@ export default {
 	},
 	mounted() {
 		
-		this.getNumberNews()
-
-		this.getItems()
+		this.getNumberNews()		
 
 	}
 

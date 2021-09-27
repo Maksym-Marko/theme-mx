@@ -197,19 +197,17 @@ export default {
 		number_news() {
 
 			this.getCurrentPage()
-		
-			this.checkError()
 
-			console.log('object', this.mx_data)
+			this.getItems()
+		
+			this.checkError()			
 
 		}
 
 	},
 	mounted() {
 		
-		this.getNumberNews()
-
-		this.getItems()
+		this.getNumberNews()		
 
 	}
 

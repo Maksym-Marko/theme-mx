@@ -9,12 +9,7 @@
  * @package theme-mx
  */
 
-?>
-
-</div>
-<!-- ... #page -->
-
-<?php wp_footer(); ?>
+wp_footer(); ?>
 
 </body>
 </html>

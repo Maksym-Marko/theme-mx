@@ -1,8 +1,25 @@
 <template>
 
   <div
+    class="mx-app-wrapper"
     v-if="mx_data.ajax_url"
   >
+
+  <!-- ******
+            *
+            * Header
+            *
+            ****** -->
+  <HeaderMenus 
+    v-if="mx_data"
+    :mx_data="mx_data"
+  />    
+
+  <!-- ******
+            *
+            * Content
+            *
+            ****** -->
   
     <!-- post type "page" ... -->
     <div
@@ -84,7 +101,15 @@
       />
       <!-- ... post type "post", CPT -->
 
-    </div>    
+    </div>  
+
+
+    <!-- ******
+              *
+              * Footer
+              *
+              ****** -->
+    <footer><h2>footer</h2></footer>
 
   </div>
   <div
@@ -100,6 +125,8 @@
 
 <script>
 
+import HeaderMenus from './components/menus/HeaderMenus.vue'
+
 import PageContent from './components/PageContent.vue'
 import PostContent from './components/PostContent.vue'
 import IndexContent from './components/IndexContent.vue'
@@ -110,6 +137,7 @@ import Page404Content from './components/Page404Content.vue'
 export default {
   name: 'App',
   components: {
+    HeaderMenus,
     PageContent,
     PostContent,
     IndexContent,

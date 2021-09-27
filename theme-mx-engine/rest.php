@@ -41,7 +41,13 @@ endif;
 */
 add_action( 'rest_api_init', function(){
 
-	register_rest_field( ['post', 'page', 'mxtpfmt_books'], 'thumbnails', array(
+	register_rest_field( [
+
+		'post',
+		'page',
+		'mxtpfmt_books'
+		
+	], 'thumbnails', array(
 
 		'get_callback' => function( $post, $field_name, $request ) {
 
