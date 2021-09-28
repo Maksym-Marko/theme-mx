@@ -48,11 +48,13 @@ if ( ! function_exists( 'theme_mx_setup' ) ) :
 		add_theme_support( 'post-thumbnails' );
 
 		// This theme uses wp_nav_menu() in one location.
+
 		register_nav_menus(
 			array(
-				'menu-1' => esc_html__( 'Primary', 'theme-mx' ),
+				'menu-1' 		=> esc_html__( 'Primary', 'theme-mx' ),
+				'footer-menu-1' => esc_html__( 'Footer menu', 'theme-mx' )
 			)
-		);
+		);	
 
 		/*
 		 * Switch default core markup for search form, comment form, and comments
@@ -259,21 +261,5 @@ function mx_content_to_string( $content ) {
 	var_dump( $content );
 
 	return ob_get_clean();
-
-}
-
-add_filter('nav_menu_css_class' , 'v123_nav_class' , 10 , 20 );
-
-function v123_nav_class ($classes, $item) {
-
-	mx_debug_to_file($classes);
-
-    // if ( in_array('menu-item-has-children', $classes ) ){
-
-    //     $classes[] = 'other-wordpress-classes';
-
-    // }
-
-    return $classes;
 
 }

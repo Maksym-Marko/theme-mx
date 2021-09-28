@@ -12,13 +12,15 @@ if ( ! function_exists( 'theme_mx_get_menus' ) ) :
 
 		$menu_id = $request['menu'];
 
-		if( ! wp_get_nav_menu_items( $menu_id ) ) {
+		$locations = get_nav_menu_locations();
 
-			return new WP_Error( 'menu_not_found', 'Menu not found', [ 'status' => 404 ] );
+		if( $locations && isset( $locations[$menu_id] ) ) {
+
+			return wp_get_nav_menu_items( $locations[$menu_id] );
 
 		} else {
 
-			return wp_get_nav_menu_items( $menu_id );
+			return new WP_Error( 'menu_not_found', 'Menu "' . $menu_id . '" not found', [ 'status' => 404 ] );
 
 		}
 

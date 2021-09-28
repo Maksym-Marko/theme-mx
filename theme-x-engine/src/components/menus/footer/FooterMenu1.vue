@@ -1,65 +1,31 @@
 <template>
 
-	<nav class="navbar navbar-expand-lg navbar-light container">
+  <nav 
+    v-if="menu_to_show"
+    class="navbar navbar-expand-lg"
+  >
 
-    <a class="navbar-brand" href="/">Theme MX</a>
-
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
-      <ul
-        class="navbar-nav mr-auto"
-        v-if="menu_to_show"
+     <ul
+        class="navbar-nav mr-auto flex-center"
       >
-
+        
         <li
           class="nav-item"
           v-for="item in displayParentItems( menu_to_show )"
           :class="[item.children[0] ? 'dropdown' : '']"
           :key="item.ID"
-          :id="'mx-menu-item-' + item.ID"
+          :id="'mx-footer-menu-item-' + item.ID"
         >
-
-          <a 
-            v-if="! item.children[0]"
-            class="nav-link"
+          
+          <a
+            class="nav-link text-light"
             :href="item.url"
           >{{ item.title }}</a>
-          <a
-            v-else
-            class="nav-link dropdown-toggle"
-            :href="item.url"
-            id="navbarDropdown"
-            role="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            {{ item.title }}
-          </a>
-
-          <div 
-            v-if="item.children[0]"
-            class="dropdown-menu"
-            aria-labelledby="navbarDropdown"
-          >
-            <a
-              v-for="subitem in displaySubItems( menu_to_show, item.ID )"
-              class="dropdown-item"
-              :key="subitem.ID"
-              :href="subitem.url"
-            >{{ subitem.title }}</a>
-          </div>
 
         </li>
 
       </ul>
-
-    </div>
-
+    
   </nav>
 
 </template>
@@ -68,7 +34,7 @@
 
 export default {
 
-	name: 'Menu1',
+	name: 'FooterMenu1',
 	props: {
 		menu: {
 			type: Object,

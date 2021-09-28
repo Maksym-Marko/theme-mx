@@ -2,7 +2,7 @@
 
   <div
     class="mx-app-wrapper"
-    v-if="mx_data.ajax_url"
+    v-if="mx_data.rest_url"
   >
 
   <!-- ******
@@ -10,10 +10,11 @@
             * Header
             *
             ****** -->
-  <HeaderMenus 
+
+  <Header 
     v-if="mx_data"
     :mx_data="mx_data"
-  />    
+  />
 
   <!-- ******
             *
@@ -24,6 +25,7 @@
     <!-- post type "page" ... -->
     <div
       v-if="! mx_data.is_single"
+      class="container"
     >
 
       <!-- templates ... -->
@@ -92,6 +94,7 @@
 
     <div
       v-else
+      class="container"
     >
 
       <!-- post type "post", CPT ... -->
@@ -101,22 +104,25 @@
       />
       <!-- ... post type "post", CPT -->
 
-    </div>  
-
+    </div>
 
     <!-- ******
               *
               * Footer
               *
               ****** -->
-    <footer><h2>footer</h2></footer>
+
+    <Footer 
+      v-if="mx_data"
+      :mx_data="mx_data"
+    />    
 
   </div>
   <div
     v-else
   >
     <p class="mx-error">
-      There is not an ajax url!
+      There is not an rest api url!
     </p>
 
   </div>
@@ -125,7 +131,7 @@
 
 <script>
 
-import HeaderMenus from './components/menus/HeaderMenus.vue'
+import Header from './components/Header.vue'
 
 import PageContent from './components/PageContent.vue'
 import PostContent from './components/PostContent.vue'
@@ -134,16 +140,19 @@ import NewsContent from './components/NewsContent.vue'
 import ArchiveContent from './components/ArchiveContent.vue'
 import Page404Content from './components/Page404Content.vue'
 
+import Footer from './components/Footer.vue'
+
 export default {
   name: 'App',
   components: {
-    HeaderMenus,
+    Header,
     PageContent,
     PostContent,
     IndexContent,
     NewsContent,
     ArchiveContent,
-    Page404Content
+    Page404Content,
+    Footer
   },
   data() {
     return {
@@ -180,7 +189,7 @@ export default {
       this.mx_data = theme_data
 
       // check templates
-      this.checkTemplate()      
+      this.checkTemplate()
 
     },
 

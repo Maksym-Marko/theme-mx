@@ -1,25 +1,25 @@
 <template>
 
-	<!-- menu-1 ... -->
-	<Menu1
-		v-if="menus.menu_1"
-		:menu="menus.menu_1"
+	<!-- footer-menu-1 ... -->
+	<FooterMenu1
+		v-if="menus.footer_menu_1"
+		:menu="menus.footer_menu_1"
 	/>
-	<!-- ... menu-1 -->
+	<!-- ... footer-menu-1 -->
 
 </template>
 
 <script>
 
-import Menu1 from './header/Menu1.vue'
+import FooterMenu1 from './footer/FooterMenu1.vue'
 
 const axios = require('axios')
 
 export default {
 
-	name: 'HeaderMenus',
+	name: 'FooterMenus',
 	components: {
-		Menu1
+		FooterMenu1
 	},
 	props: {
 		mx_data: {
@@ -31,7 +31,7 @@ export default {
 
 		return {
 			menus: {
-				menu_1: null
+				footer_menu_1: null
 			}
 		}
 
@@ -53,7 +53,7 @@ export default {
 
 					let res = await axios.get( rest_route );
 
-					_this.menus.menu_1 = res.data
+					_this.menus.footer_menu_1 = res.data
 
 				} catch (err) {
 
@@ -70,7 +70,7 @@ export default {
 	},
 	mounted() {
 
-		this.getMenu( 'menu-1' )
+		this.getMenu( 'footer-menu-1' )
 
 	}
 

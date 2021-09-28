@@ -78,7 +78,7 @@ class ThemeMXBasicTemplate
 
 				$script .= '"post_id":"' 	. $this->post_id . '",';
 
-				$script .= '"ajax_url":"' 	. admin_url( "admin-ajax.php" ) . '",';
+				// $script .= '"ajax_url":"' 	. admin_url( "admin-ajax.php" ) . '",';
 
 				$script .= '"rest_url":"' 	. esc_url( get_rest_url() ) . '",';				
 
