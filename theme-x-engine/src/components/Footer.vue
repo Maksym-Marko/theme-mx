@@ -21,24 +21,19 @@
 		
 			<!-- Widgets ... -->
 			<div class="row pt-5 pb-5">
+				
+				<Sidebar
+					v-if="mx_data"
+					:mx_data="mx_data"
+					:id="'footer-sidebar-1'"
+				/>
 
-				<div class="col-md-4">
 
-					Lorem ipsum dolor sit amet consectetur adipisicing, elit. Ab minima mollitia, earum aperiam voluptates cumque iste vero voluptate odio. Aspernatur quas quia, illum recusandae id laborum. Nihil autem vitae iste!
-
-				</div>
-
-				<div class="col-md-4">
-
-					Lorem ipsum dolor sit amet consectetur adipisicing, elit. Ab minima mollitia, earum aperiam voluptates cumque iste vero voluptate odio. Aspernatur quas quia, illum recusandae id laborum. Nihil autem vitae iste!
-
-				</div>
-
-				<div class="col-md-4">
-
-					Lorem ipsum dolor sit amet consectetur adipisicing, elit. Ab minima mollitia, earum aperiam voluptates cumque iste vero voluptate odio. Aspernatur quas quia, illum recusandae id laborum. Nihil autem vitae iste!
-
-				</div>
+				<Sidebar
+					v-if="mx_data"
+					:mx_data="mx_data"
+					:id="'footer-sidebar-2'"
+				/>
 
 			</div>
 
@@ -52,33 +47,20 @@
 <script>
 
 import FooterMenus from './menus/FooterMenus.vue'
+import Sidebar from './sidebars/Sidebar.vue'
 
 export default {
 
 	name: 'Footer',
 	components: {
-		FooterMenus
+		FooterMenus,
+		Sidebar
 	},
 	props: {
 		mx_data: {
 			type: Object,
 			required: true
 		}
-	},
-	data() {
-
-		return {
-			
-		}
-
-	},
-	methods: {
-
-
-	},
-	mounted() {
-
-
 	}
 
 }

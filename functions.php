@@ -124,10 +124,37 @@ add_action( 'after_setup_theme', 'theme_mx_content_width', 0 );
  * @link https://developer.wordpress.org/themes/functionality/sidebars/#registering-a-sidebar
  */
 function theme_mx_widgets_init() {
+
 	register_sidebar(
 		array(
 			'name'          => esc_html__( 'Sidebar', 'theme-mx' ),
 			'id'            => 'sidebar-1',
+			'description'   => esc_html__( 'Add widgets here.', 'theme-mx' ),
+			'before_widget' => '<section id="%1$s" class="widget %2$s">',
+			'after_widget'  => '</section>',
+			'before_title'  => '<h2 class="widget-title">',
+			'after_title'   => '</h2>',
+		)
+	);
+
+	// footer sidebar 1
+	register_sidebar(
+		array(
+			'name'          => esc_html__( 'Footer 1 Widgets', 'theme-mx' ),
+			'id'            => 'footer-sidebar-1',
+			'description'   => esc_html__( 'Add widgets here.', 'theme-mx' ),
+			'before_widget' => '<section id="%1$s" class="widget %2$s">',
+			'after_widget'  => '</section>',
+			'before_title'  => '<h2 class="widget-title">',
+			'after_title'   => '</h2>',
+		)
+	);
+
+	// footer sidebar 2
+	register_sidebar(
+		array(
+			'name'          => esc_html__( 'Footer 2 Widgets', 'theme-mx' ),
+			'id'            => 'footer-sidebar-2',
 			'description'   => esc_html__( 'Add widgets here.', 'theme-mx' ),
 			'before_widget' => '<section id="%1$s" class="widget %2$s">',
 			'after_widget'  => '</section>',

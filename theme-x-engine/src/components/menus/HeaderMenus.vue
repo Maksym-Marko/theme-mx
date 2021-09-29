@@ -32,7 +32,8 @@ export default {
 		return {
 			menus: {
 				menu_1: null
-			}
+			},
+			error: null
 		}
 
 	},

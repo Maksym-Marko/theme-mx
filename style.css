@@ -648,6 +648,10 @@ textarea {
 /*--------------------------------------------------------------
 # Layouts
 --------------------------------------------------------------*/
+.mx-content-wrapper {
+	max-width: 1200px;
+    margin: 0 auto;
+}
 
 /*--------------------------------------------------------------
 # Components
@@ -772,10 +776,10 @@ ul.mx-news-pagination li.active {
 	display: block;
 }
 
-.post,
+/*.post,
 .page {
 	margin: 0 0 1.5em;
-}
+}*/
 
 .updated:not(.published) {
 	display: none;

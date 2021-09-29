@@ -32,7 +32,8 @@ export default {
 		return {
 			menus: {
 				footer_menu_1: null
-			}
+			},
+			error: null
 		}
 
 	},
@@ -63,7 +64,7 @@ export default {
 
 				}
 
-			}			
+			}
 
 		}
 

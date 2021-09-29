@@ -25,7 +25,7 @@
     <!-- post type "page" ... -->
     <div
       v-if="! mx_data.is_single"
-      class="container"
+      class="mx-content-wrapper"
     >
 
       <!-- templates ... -->
@@ -75,6 +75,19 @@
         </div>      
         <!-- ... news -->
 
+        <!-- with_sidebar ... -->
+        <div
+          v-if="mx_data.page_template === 'with_sidebar'"
+        >
+
+          <PageWithSidebar 
+            v-if="mx_data"
+            :mx_data="mx_data"
+          />
+
+        </div>
+        <!-- ... with_sidebar -->
+
         <!-- 404 ... -->
         <div
           v-if="mx_data.page_template === '404'"
@@ -85,7 +98,7 @@
             :mx_data="mx_data"
           />
 
-        </div>      
+        </div>
         <!-- ... 404 -->  
 
       <!-- ... templates -->
@@ -138,6 +151,7 @@ import PostContent from './components/PostContent.vue'
 import IndexContent from './components/IndexContent.vue'
 import NewsContent from './components/NewsContent.vue'
 import ArchiveContent from './components/ArchiveContent.vue'
+import PageWithSidebar from './components/PageWithSidebar.vue'
 import Page404Content from './components/Page404Content.vue'
 
 import Footer from './components/Footer.vue'
@@ -151,6 +165,7 @@ export default {
     IndexContent,
     NewsContent,
     ArchiveContent,
+    PageWithSidebar,
     Page404Content,
     Footer
   },
@@ -162,6 +177,7 @@ export default {
         'archive',
         'news',
         'archive',
+        'with_sidebar',
         '404'
       ],
       mx_data: {

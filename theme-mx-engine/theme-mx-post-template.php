@@ -85,7 +85,7 @@ if ( ! function_exists( 'theme_mx_posts_navigation' ) ) :
 	    register_rest_route( 'theme_mx/v1', '/navigation/post_type=(?P<post_type>[a-zA-Z0-9_-]+)/post_id=(?P<post_id>\d+)', array(
 	        'methods' => 'GET',
 	        'callback' => 'theme_mx_posts_navigation',
-	        'permission_callback' => null
+	        'permission_callback' => '__return_true'
 	    ) );
 
 	} );
