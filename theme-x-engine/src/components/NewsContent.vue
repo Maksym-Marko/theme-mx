@@ -42,7 +42,6 @@ export default {
 	data() {
 
 		return {
-			content: null,
 			error: null,
 			posts: [],
 			number_news: 0,
@@ -66,7 +65,7 @@ export default {
 		/*
 		* Get Items
 		*/
-		async getItems( post_type = null ) {
+		async getItems() {
 
 			const _this = this
 
@@ -76,21 +75,9 @@ export default {
 
 				post_anchor = this.mx_data.post_type
 
-			}				
+			}
 
 			let rest_route = this.mx_data.rest_url + 'wp/v2/' + post_anchor + '?per_page=' + this.mx_data.pagination.posts_per_page + '&page=' + this.current_page + '&order=desc&orderby=date'
-
-			if( post_type !== null ) {
-
-				if( post_type !== 'post' ) {
-
-					post_anchor = post_type
-
-				}
-
-				rest_route = this.mx_data.rest_url + 'wp/v2/' + post_anchor + '?per_page=' + this.mx_data.pagination.posts_per_page + '&page=' + this.current_page + '&order=desc&orderby=date'
-
-			}
 
 			try {
 
@@ -115,13 +102,21 @@ export default {
 
 			const _this = this
 
-			let rest_route = this.mx_data.rest_url + 'theme_mx/v1/count/post_type=' + this.mx_data.post_type
+			let post_anchor = 'posts';
+
+			if( this.mx_data.post_type !== 'post' ) {
+
+				post_anchor = this.mx_data.post_type
+
+			}
+
+			let rest_route = this.mx_data.rest_url + 'wp/v2/' + post_anchor
 
 			try {
 
 				let res = await axios.get( rest_route )
 
-				_this.number_news = res.data
+				_this.number_news = parseInt( res.headers['x-wp-total'] )
 
 			} catch (err) {
 
@@ -129,7 +124,7 @@ export default {
 
 				console.error( err.response.data );
 
-			}			
+			}
 
 		},
 
@@ -140,10 +135,10 @@ export default {
 			if( curretn_page.indexOf( '#page-' ) >= 0 ) {
 
 				let matches = curretn_page.match( /#page-(\d+)/ )
+			
+				if( matches ) {
 
-				let get_page = parseInt( matches[1] );
-
-				if( Number.isInteger( get_page ) ) {
+					let get_page = parseInt( matches[1] );
 
 					if( get_page < 1 ) {
 
@@ -170,6 +165,12 @@ export default {
 					this.current_page = get_page
 
 					return
+
+				} else {
+
+					this.current_page = 1
+
+					history.pushState( { mxThemeNewsPage:'1' },"",'#page-1' )
 
 				}
 

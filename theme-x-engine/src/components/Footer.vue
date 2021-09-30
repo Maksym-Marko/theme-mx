@@ -7,7 +7,7 @@
 			<!-- Footer menu ... -->
 			<div class="row">
 
-				<div class="col">
+				<div class="col border-bottom border-light">
 
 					<FooterMenus
 						v-if="mx_data"
@@ -39,6 +39,13 @@
 
 		</div>
 		<!-- ... Widgets -->
+
+		<!-- Copyright ... -->
+		<div class="mx-copyright footer-copyright text-center py-3 bg-dark">
+			© 2021 Copyright:
+			<a href="/" class="text-light"> ThemeMX</a>
+		</div>
+		<!-- Copyright ... -->
 
     </footer>
 

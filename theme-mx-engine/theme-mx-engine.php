@@ -39,6 +39,11 @@ require get_template_directory() . '/theme-mx-engine/theme-mx-page404-template.p
 require get_template_directory() . '/theme-mx-engine/theme-mx-post-template.php';
 
 /**
+ * Search Page.
+ */
+require get_template_directory() . '/theme-mx-engine/theme-mx-search-template.php';
+
+/**
  * Books CPT.
  */
 require get_template_directory() . '/theme-mx-engine/theme-mx-cpt-mxtpfmt_books-template.php';

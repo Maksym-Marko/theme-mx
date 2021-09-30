@@ -4,8 +4,8 @@
 
 get_header();
 
-// render news page template
-( new ThemeMXNewsTemplate(
+// render page template
+( new ThemeMXPageTemplate(
 	[
 		'page_template' => 'with_sidebar'
 	]

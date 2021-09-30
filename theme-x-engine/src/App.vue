@@ -99,7 +99,20 @@
           />
 
         </div>
-        <!-- ... 404 -->  
+        <!-- ... 404 -->
+
+        <!-- search ... -->
+        <div
+          v-if="mx_data.page_template === 'search'"
+        >
+        
+          <PageSearch
+            v-if="mx_data"
+            :mx_data="mx_data"
+          />
+
+        </div>
+        <!-- ... search -->
 
       <!-- ... templates -->
     </div>
@@ -154,6 +167,8 @@ import ArchiveContent from './components/ArchiveContent.vue'
 import PageWithSidebar from './components/PageWithSidebar.vue'
 import Page404Content from './components/Page404Content.vue'
 
+import PageSearch from './components/PageSearch.vue'
+
 import Footer from './components/Footer.vue'
 
 export default {
@@ -167,6 +182,7 @@ export default {
     ArchiveContent,
     PageWithSidebar,
     Page404Content,
+    PageSearch,
     Footer
   },
   data() {
@@ -178,7 +194,8 @@ export default {
         'news',
         'archive',
         'with_sidebar',
-        '404'
+        '404',
+        'search'
       ],
       mx_data: {
         post_type: null,

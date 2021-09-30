@@ -90,6 +90,31 @@ add_action( 'rest_api_init', function(){
 } );
 
 /*
+*  Get Post meta
+*/
+add_action( 'rest_api_init', function(){
+
+	register_rest_field( [
+
+		'post',
+		'page',
+		'mxtpfmt_books'
+		
+	], 'post_meta', array(
+
+		'get_callback' => function( $post, $field_name, $request ) {
+
+			$post_id = $post['id'];			
+
+			return get_post_meta( $post_id );
+		},
+		'update_callback' => null
+
+	) );
+
+} );
+
+/*
 * Get CPT posts
 */
 if ( ! function_exists( 'theme_mx_get_cpt_posts' ) ) :
@@ -271,11 +296,11 @@ if ( ! function_exists( 'mx_get_sidebars' ) AND ! function_exists( 'mx_get_sideb
 
 	    global $wp_registered_sidebars;
 
-	    $sidebar_id = sanitize_title( $sidebar );
+	    $sidebar_id = sanitize_text_field( $sidebar );
 
 	    foreach ( (array) $wp_registered_sidebars as $key => $sidebar ) {
 
-	        if ( sanitize_title( $sidebar['name'] ) == $sidebar_id ) {
+	        if ( sanitize_text_field( $sidebar['name'] ) == $sidebar_id ) {
 
 	            return $sidebar;
 
@@ -316,5 +341,108 @@ if ( ! function_exists( 'mx_get_sidebars' ) AND ! function_exists( 'mx_get_sideb
 	    ] );
 
 	} );
+
+endif;
+
+/*
+* Global search
+*/
+if ( ! function_exists( 'theme_mx_global_search' ) ) :
+	
+	function theme_mx_global_search( $request ) {
+
+		$search = sanitize_text_field( $request['search'] );
+
+		global $wpdb;
+
+		$posts_table = $wpdb->prefix . 'posts';
+
+		$results = $wpdb->get_results( "SELECT ID, post_title, post_date, post_content, post_excerpt FROM $posts_table
+			WHERE post_status = 'publish'
+				AND ( post_title LIKE '%$search%'
+					OR post_content LIKE '%$search%'
+					OR post_excerpt LIKE '%$search%' )
+			ORDER BY post_date DESC", ARRAY_A );		
+
+		foreach ( $results as $key => $value ) {
+
+			$post_id = $value['ID'];
+
+			$results[$key]['thumbnails'] = [];
+
+			$the_thumbnail_full = get_the_post_thumbnail_url( $post_id );
+
+			if( $the_thumbnail_full ) {
+
+				// full
+				$results[$key]['thumbnails']['full'] = $the_thumbnail_full;
+				
+				// thumbnail
+				$the_thumbnail_thumbnail = get_the_post_thumbnail_url( $post_id, 'thumbnail' );
+
+				$results[$key]['thumbnails']['thumbnail'] = $the_thumbnail_thumbnail;
+
+				// medium
+				$the_thumbnail_medium = get_the_post_thumbnail_url( $post_id, 'medium' );
+
+				$results[$key]['thumbnails']['medium'] = $the_thumbnail_medium;
+
+				// large
+				$the_thumbnail_large = get_the_post_thumbnail_url( $post_id, 'large' );
+
+				$results[$key]['thumbnails']['large'] = $the_thumbnail_large;
+
+			}
+
+			// permalink
+			$results[$key]['permalink'] = get_the_permalink( $post_id );
+
+			// post excerpt
+			$results[$key]['excerpt'] = get_the_excerpt( $post_id );
+
+		}
+		
+		return $results;
+
+	}
+	
+	function theme_mx_global_search_count( $request ) {
+
+		$search = sanitize_text_field( $request['search'] );
+
+		global $wpdb;
+
+		$posts_table = $wpdb->prefix . 'posts';
+
+		$number_posts = $wpdb->get_var(
+			"SELECT COUNT(ID)
+				FROM $posts_table
+				WHERE post_status = 'publish'
+					AND ( post_title LIKE '%$search%'
+						OR post_content LIKE '%$search%'
+						OR post_excerpt LIKE '%$search%' )
+			"
+		);
+
+		return intval( $number_posts );
+
+	}
+
+	add_action( 'rest_api_init', function () {
+
+		register_rest_route( 'theme_mx/v1', '/search/string=(?P<search>[a-zA-Z0-9_-]+)', array(
+			'methods' => 'GET',
+			'callback' => 'theme_mx_global_search',
+			'permission_callback' => '__return_true'
+		) );
+
+		register_rest_route( 'theme_mx/v1', '/search/string=(?P<search>[a-zA-Z0-9_-]+)/count', array(
+			'methods' => 'GET',
+			'callback' => 'theme_mx_global_search_count',
+			'permission_callback' => '__return_true'
+		) );
+
+	} );
+	
 
 endif;
