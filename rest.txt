@@ -1,4 +1,0 @@
-/wp-json/wp/v2/posts?per_page=20&page=1
-/wp-json/wp/v2/posts?order=desc
-/wp-json/wp/v2/posts?search=abra
-/wp-json/wp/v2/posts?before=2021-09-01T05:31:34&per_page=3&order=asc&orderby=id

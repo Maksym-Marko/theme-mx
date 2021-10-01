@@ -3,7 +3,7 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class ThemeMXSearchPageTemplate extends ThemeMXPageTemplate
+class ThemeMXSearchPageTemplate extends ThemeMXIndexTemplate
 {
 
 	public $search_str = '';

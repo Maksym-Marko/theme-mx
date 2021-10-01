@@ -347,7 +347,7 @@ endif;
 /*
 * Global search
 */
-if ( ! function_exists( 'theme_mx_global_search' ) ) :
+if ( ! function_exists( 'theme_mx_global_search' ) AND ! function_exists( 'theme_mx_global_search_count' ) ) :
 	
 	function theme_mx_global_search( $request ) {
 
@@ -355,14 +355,45 @@ if ( ! function_exists( 'theme_mx_global_search' ) ) :
 
 		global $wpdb;
 
+		$offest = 0;		
+
+		if( isset( $request['page'] )  ) {
+
+			$page = sanitize_text_field( $request['page'] );
+
+			if( intval( $page ) > 1 ) {
+
+				$offest = intval( $page );
+
+			}
+		}			
+
+		$number_posts = 10;
+
+		if( isset( $request['per_page'] )  ) {
+
+			$per_page = sanitize_text_field( $request['per_page'] );
+
+			$number_posts = intval( $per_page );
+
+		}
+
+			if( $offest > 1 ) {
+
+				$offest = ( $number_posts * $offest ) - $number_posts;
+
+			}
+
 		$posts_table = $wpdb->prefix . 'posts';
 
 		$results = $wpdb->get_results( "SELECT ID, post_title, post_date, post_content, post_excerpt FROM $posts_table
 			WHERE post_status = 'publish'
+				AND post_type != 'nav_menu_item'
 				AND ( post_title LIKE '%$search%'
 					OR post_content LIKE '%$search%'
 					OR post_excerpt LIKE '%$search%' )
-			ORDER BY post_date DESC", ARRAY_A );		
+			ORDER BY post_date DESC
+			LIMIT $offest, $number_posts", ARRAY_A );
 
 		foreach ( $results as $key => $value ) {
 
@@ -418,6 +449,7 @@ if ( ! function_exists( 'theme_mx_global_search' ) ) :
 			"SELECT COUNT(ID)
 				FROM $posts_table
 				WHERE post_status = 'publish'
+					AND post_type != 'nav_menu_item'
 					AND ( post_title LIKE '%$search%'
 						OR post_content LIKE '%$search%'
 						OR post_excerpt LIKE '%$search%' )

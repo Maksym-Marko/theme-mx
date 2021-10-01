@@ -1,25 +1,20 @@
 /*!
-Theme Name: theme-mx
-Theme URI: http://underscores.me/
-Author: Underscores.me
-Author URI: http://underscores.me/
-Description: Description
+Theme Name: ThemeMx
+Theme URI: https://github.com/Maxim-us/theme-mx
+Author: Marko Maksym
+Author URI: https://markomaksym.com.ua/
+Description: ThemeMx is a WordPress theme created using Vue.js CLI.
 Version: 1.0.0
-Tested up to: 5.4
-Requires PHP: 5.6
-License: GNU General Public License v2 or later
-License URI: LICENSE
+Tested up to: 5.8
+Requires PHP: 7.4
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: theme-mx
-Tags: custom-background, custom-logo, custom-menu, featured-images, threaded-comments, translation-ready
+Tags: vue.js, vue cli
 
-This theme, like WordPress, is licensed under the GPL.
-Use it to make something cool, have fun, and share what you've learned.
-
-theme-mx is based on Underscores https://underscores.me/, (C) 2012-2020 Automattic, Inc.
-Underscores is distributed under the terms of the GNU GPL v2 or later.
-
-Normalizing styles have been helped along thanks to the fine work of
-Nicolas Gallagher and Jonathan Neal https://necolas.github.io/normalize.css/
+ThemeMx allows you to create a WordPress theme using Vue.js and WordPress REST API. To make changes of it you must have:
+- Node.js engine (https://nodejs.org/en/)
+- Git Bash (optional) (https://git-scm.com/downloads)
 */
 
 /*--------------------------------------------------------------

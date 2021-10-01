@@ -6,10 +6,22 @@
 			:search_str="search_str"
 		/>
 
+		<div class="mx-result-count">
+			Number of results: <strong>{{ number_results }}</strong>
+		</div>
+
 		<SearchResults
 			v-for="post in posts"
 			:post="post"
 			:key="post.ID"
+		/>
+
+		<Pagination
+			v-if="mx_data.pagination.enable"
+			:pagination="mx_data.pagination"
+			:number_news="number_results"
+			:current_page="current_page"
+			@to_page="setPage"
 		/>
 
 	</main>
@@ -19,6 +31,8 @@
 
 import SearchForm from './search/SearchForm.vue'
 import SearchResults from './search/SearchResults.vue'
+import Pagination from './index/Pagination.vue'
+
 
 const axios = require('axios')
 
@@ -27,7 +41,8 @@ export default {
 	name: 'PageSearch',
 	components: {
 		SearchForm,
-		SearchResults
+		SearchResults,
+		Pagination
 	},
 	props: {
 		mx_data: {
@@ -41,10 +56,22 @@ export default {
 			posts: [],
 			number_results: 0,
 			current_page: 1,
-			search_str: ''
+			search_str: '',
+			posts_per_page: 10
 		}
 	},
 	methods: {
+
+		/*
+		* Set page
+		*/
+		setPage( page ) {
+
+			this.current_page = page
+
+			this.getSearchResult( this.search_str )
+
+		},
 
 		getResult( string ) {
 
@@ -56,11 +83,17 @@ export default {
 
 		async getSearchResult( string ) {
 
+			if( this.search_str !== string ) {
+
+				this.search_str = string
+
+			}			
+
 			if( string ) {
 
 				const _this = this
 
-				let rest_route = this.mx_data.rest_url + 'theme_mx/v1/search/string=' + string
+				let rest_route = this.mx_data.rest_url + 'theme_mx/v1/search/string=' + string + '?page=' + this.current_page + '&per_page=' + this.mx_data.pagination.posts_per_page
 
 				try {
 
@@ -120,6 +153,57 @@ export default {
 
 		},
 
+		getCurrentPage() {
+
+			let curretn_page = window.location.href
+
+			if( curretn_page.indexOf( '#page-' ) >= 0 ) {
+
+				let matches = curretn_page.match( /#page-(\d+)/ )
+			
+				if( matches ) {
+
+					let get_page = parseInt( matches[1] );
+
+					if( get_page < 1 ) {
+
+						this.current_page = 1
+
+						history.pushState( { mxThemeNewsPage:'1' },"",'#page-1' )
+
+						return
+
+					}
+
+					let pages = Math.ceil( this.number_results / parseInt( this.mx_data.pagination.posts_per_page ) )
+
+					if( get_page > pages ) {
+
+						this.current_page = pages
+
+						history.pushState( { mxThemeNewsPage: this.current_page },"",'#page-' + this.current_page )
+
+						return
+
+					}
+
+					this.current_page = get_page
+
+					return
+
+				} else {
+
+					this.current_page = 1
+
+					history.pushState( { mxThemeNewsPage:'1' },"",'#page-1' )
+
+				}
+
+			}
+
+		},
+
+
 		setUrl( string ) {
 
 			const state = { 'search': string }
@@ -155,6 +239,17 @@ export default {
 				}
 
 			}, 1000 )
+
+		}
+
+	},
+	watch: {
+
+		number_results() {
+
+			this.getCurrentPage()
+
+			this.getSearchResult( this.search_str )
 
 		}
 

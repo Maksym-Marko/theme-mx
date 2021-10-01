@@ -1,36 +1,44 @@
-=== theme-mx ===
+=== ThemeMx ===
 
-Contributors: automattic
-Tags: custom-background, custom-logo, custom-menu, featured-images, threaded-comments, translation-ready
+Contributors: markomaksym
+Tags: vue.js, vue cli
 
-Requires at least: 4.5
-Tested up to: 5.4
-Requires PHP: 5.6
+Requires at least: 5.8
+Tested up to: 5.8
+Requires PHP: 7.4
 Stable tag: 1.0.0
-License: GNU General Public License v2 or later
-License URI: LICENSE
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-A starter theme called theme-mx.
+ThemeMx is a WordPress theme created using Vue.js CLI.
 
 == Description ==
 
-Description
+ThemeMx - a WordPress theme that is built using Vue.js CLI.
+If you are a frontEnd developer and want to create a WordPress website - try ThemeMx. WordPress has a great admin panel and flexible REST API. These WP features help you create a cool website really shortly.
+Enjoy!)
+
+If you are new in Vue.js CLI you have install:
+- Node.js engine (https://nodejs.org/en/)
+- Git Bash (optional) (https://git-scm.com/downloads)
 
 == Installation ==
 
+0. Download ThemeMx from Github (https://github.com/Maxim-us/theme-mx).
 1. In your admin panel, go to Appearance > Themes and click the Add New button.
 2. Click Upload Theme and Choose File, then select the theme's .zip file. Click Install Now.
 3. Click Activate to use your new theme right away.
 
-== Frequently Asked Questions ==
-
-= Does this theme support any plugins? =
-
-theme-mx includes support for WooCommerce and for Infinite Scroll in Jetpack.
+== Usage ==
+0. Install ThemeMx.
+1. Enter /wp-content/themes/theme-mx/theme-x-engine/ and run Git Bash.
+2. In the Git Bash run the command `npm install`.
+3. When all the node's packages will be installed, run th e command `npm run watch`.
+4. The /wp-content/themes/theme-mx/theme-x-engine/ folder contain Vue.js environment. Here you can create your own logic.
 
 == Changelog ==
 
-= 1.0 - May 12 2015 =
+= 1.0 - October 1 2021 =
 * Initial release
 
 == Credits ==
