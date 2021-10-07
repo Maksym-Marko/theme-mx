@@ -13,8 +13,9 @@ get_header();
 // render search page template
 ( new ThemeMXSearchPageTemplate(
 	[
-		'page_template' => 'search',
-        'pagination'    => [
+		'page_template'      => 'search',
+        // 'search_post_type'   => 'post',
+        'pagination'         => [
             'enable'         => true,
             'posts_per_page' => 4
         ]

@@ -95,6 +95,12 @@ export default {
 
 				let rest_route = this.mx_data.rest_url + 'theme_mx/v1/search/string=' + string + '?page=' + this.current_page + '&per_page=' + this.mx_data.pagination.posts_per_page
 
+				if( this.mx_data.search_post_type !== '' ) {
+
+					rest_route = this.mx_data.rest_url + 'theme_mx/v1/search/string=' + string + '?page=' + this.current_page + '&per_page=' + this.mx_data.pagination.posts_per_page + '&post_type=' + this.mx_data.search_post_type
+
+				}
+
 				try {
 
 					let res = await axios.get( rest_route );
@@ -128,6 +134,12 @@ export default {
 				const _this = this
 
 				let rest_route = this.mx_data.rest_url + 'theme_mx/v1/search/string=' + string + '/count'
+
+				if( this.mx_data.search_post_type !== '' ) {
+
+					rest_route = this.mx_data.rest_url + 'theme_mx/v1/search/string=' + string + '/count?post_type=' + this.mx_data.search_post_type
+
+				}
 
 				try {
 

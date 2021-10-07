@@ -19,7 +19,7 @@ class ThemeMXCPTmxtpfmt_booksTemplate extends ThemeMXPostTemplate
 
 		parent::__construct( $args );
 
-		// Set Page template
+		// Set cpt_data
 		$this->set_cpt_data( $args['cpt_data'] ?? NULL );
 
 		// extends js vars

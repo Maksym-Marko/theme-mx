@@ -349,7 +349,7 @@ endif;
 */
 if ( ! function_exists( 'theme_mx_global_search' ) AND ! function_exists( 'theme_mx_global_search_count' ) ) :
 	
-	function theme_mx_global_search( $request ) {
+	function theme_mx_global_search( $request ) {		
 
 		$search = sanitize_text_field( $request['search'] );
 
@@ -386,14 +386,31 @@ if ( ! function_exists( 'theme_mx_global_search' ) AND ! function_exists( 'theme
 
 		$posts_table = $wpdb->prefix . 'posts';
 
-		$results = $wpdb->get_results( "SELECT ID, post_title, post_date, post_content, post_excerpt FROM $posts_table
+		$query_string = "SELECT ID, post_type, post_title, post_date, post_content, post_excerpt FROM $posts_table
 			WHERE post_status = 'publish'
 				AND post_type != 'nav_menu_item'
 				AND ( post_title LIKE '%$search%'
 					OR post_content LIKE '%$search%'
 					OR post_excerpt LIKE '%$search%' )
 			ORDER BY post_date DESC
-			LIMIT $offest, $number_posts", ARRAY_A );
+			LIMIT $offest, $number_posts";
+
+		if( isset( $request['post_type'] ) ) {
+
+			$post_type = sanitize_text_field( $request['post_type'] );
+
+			$query_string = "SELECT ID, post_type, post_title, post_date, post_content, post_excerpt FROM $posts_table
+				WHERE post_status = 'publish'
+					AND post_type = '$post_type'
+					AND ( post_title LIKE '%$search%'
+						OR post_content LIKE '%$search%'
+						OR post_excerpt LIKE '%$search%' )
+				ORDER BY post_date DESC
+				LIMIT $offest, $number_posts";
+
+		}
+
+		$results = $wpdb->get_results( $query_string, ARRAY_A );
 
 		foreach ( $results as $key => $value ) {
 
@@ -445,16 +462,29 @@ if ( ! function_exists( 'theme_mx_global_search' ) AND ! function_exists( 'theme
 
 		$posts_table = $wpdb->prefix . 'posts';
 
-		$number_posts = $wpdb->get_var(
-			"SELECT COUNT(ID)
+		$query_string = "SELECT COUNT(ID)
+			FROM $posts_table
+			WHERE post_status = 'publish'
+				AND post_type != 'nav_menu_item'
+				AND ( post_title LIKE '%$search%'
+					OR post_content LIKE '%$search%'
+					OR post_excerpt LIKE '%$search%' )";
+
+		if( isset( $request['post_type'] ) ) {
+
+			$post_type = sanitize_text_field( $request['post_type'] );
+
+			$query_string = "SELECT COUNT(ID)
 				FROM $posts_table
 				WHERE post_status = 'publish'
-					AND post_type != 'nav_menu_item'
+					AND post_type = '$post_type'					
 					AND ( post_title LIKE '%$search%'
 						OR post_content LIKE '%$search%'
-						OR post_excerpt LIKE '%$search%' )
-			"
-		);
+						OR post_excerpt LIKE '%$search%' )";
+
+		}
+
+		$number_posts = $wpdb->get_var( $query_string );
 
 		return intval( $number_posts );
 

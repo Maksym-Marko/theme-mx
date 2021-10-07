@@ -19,3 +19,5 @@ theme-x-engine/*.ntvs*
 theme-x-engine/*.njsproj
 theme-x-engine/*.sln
 theme-x-engine/*.sw?
+
+mx-debug/
